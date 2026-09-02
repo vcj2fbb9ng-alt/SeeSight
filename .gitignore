@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.env
+*.log
+
+# SQLite database (generated at runtime)
+backend/data/*.sqlite
+backend/data/*.sqlite-journal
+
+# Generated invoice PDFs (generated at runtime)
+backend/invoices/*.pdf
+
+.DS_Store
