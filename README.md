@@ -10,30 +10,39 @@
 SeeSight lets a business traveler request a virtual card for a trip,
 simulates purchases on that card getting auto-categorized, and generates a
 clean itemized PDF invoice for the employer — end to end, with no real bank
-credentials required.
+credentials required. The UI is mobile-first (built and tested at
+iPhone-width viewports first, then progressively enhanced for desktop), and
+invoices are written to be self-explanatory to a finance reviewer: a
+business purpose, a plain-English line per charge, and an explicit
+"already paid, nothing to reimburse" statement.
 
 ## Flow
 
-1. **Request a trip card** — fill in trip name, destination, dates, and
-   budget; "pay" a 3 GEL one-time issuance fee (mock); a sandbox virtual
-   card is issued for the trip.
+1. **Request a trip card** — fill in trip name, destination, dates, budget,
+   employer name, and a short business purpose; "pay" a 3 GEL one-time
+   issuance fee (mock); a sandbox virtual card is issued for the trip.
 2. **Transactions come in** — click a preset button (or fill a custom
    merchant/amount) to simulate a purchase on the card, or POST a
    webhook-shaped payload to `/api/webhooks/provider` to simulate the
    provider pushing a transaction. Each transaction is auto-categorized
    into Hotel / Flight / Meals / Transport / Other using merchant-category
-   code (MCC) and merchant-name rules. Re-categorize any transaction by
-   hand from a dropdown.
+   code (MCC) and merchant-name rules, and gets a plain-English business
+   description (e.g. "Lodging — accommodation at Hilton Vienna during
+   business travel"). Re-categorize any transaction by hand from a
+   dropdown — its description regenerates to match.
 3. **Generate the invoice** — on demand, or after marking the trip
-   complete: a clean itemized PDF is generated (date, merchant, category,
-   amount; subtotals by category; total) and can be downloaded or "sent to
-   the company" (mock — logs to the backend console).
+   complete: a clean itemized PDF is generated (invoice number, employer,
+   business purpose, card used, a "paid in full — no reimbursement owed"
+   callout, per-transaction descriptions, subtotals by category, total,
+   and a signature line) and can be downloaded or "sent to the company"
+   (mock — logs to the backend console).
 
 ## Tech stack
 
 - **Backend**: Node.js + Express, SQLite (`better-sqlite3`), `pdfkit` for
   invoice PDFs.
-- **Frontend**: React (Vite), plain CSS, `react-router-dom`.
+- **Frontend**: React (Vite), plain CSS (mobile-first, no framework),
+  `react-router-dom`.
 - **Card issuing**: a pluggable provider interface with a `mock` sandbox
   implementation (fabricates card data locally — see
   [`backend/src/services/cardIssuing/README.md`](backend/src/services/cardIssuing/README.md)
@@ -43,12 +52,14 @@ credentials required.
 ## Data model
 
 - **Trip**: id, traveler name, name, destination, start/end date, budget,
-  status (`active`/`completed`), fee paid.
+  business purpose, employer name, status (`active`/`completed`), fee paid.
 - **Card**: id, trip id, provider, provider card id, masked number, last4,
   brand, expiry, status.
-- **Transaction**: id, card id, merchant name, MCC, amount, category,
-  raw category code, manually-recategorized flag, timestamp.
-- **Invoice**: id, trip id, generated at, total amount, PDF path, sent flag.
+- **Transaction**: id, card id, merchant name, MCC, amount, category, a
+  generated business-purpose description, raw category code,
+  manually-recategorized flag, timestamp.
+- **Invoice**: id, invoice number, trip id, generated at, total amount, PDF
+  path, sent flag.
 
 ## Running it locally
 
@@ -83,9 +94,10 @@ open http://localhost:5173.
 
 ### 3. Try the flow
 
-1. Open http://localhost:5173, click **+ New trip**, fill in the form, and
-   submit — this mock-charges the 3 GEL fee and issues a sandbox card in
-   one step.
+1. Open http://localhost:5173, click **+ New trip**, fill in the form
+   (including the employer name and business purpose, used on the
+   invoice), and submit — this mock-charges the 3 GEL fee and issues a
+   sandbox card in one step.
 2. On the trip page, click a few of the **Simulate a transaction** preset
    buttons (Hotel / Flight / Meal / Transport / Other) — watch each land in
    the transactions table, already categorized.
@@ -127,6 +139,37 @@ Simple, transparent, and prototype-appropriate — see
 A traveler can always override the result — that override is recorded (
 `manuallyRecategorized`) and never gets clobbered by re-running
 categorization.
+
+## Mobile-first design
+
+The traveler-facing UI (`frontend/src/index.css`) is written mobile-first:
+base styles target a small viewport, wrapped in touch-sized controls
+(44px-tall inputs/buttons, 16px input font to stop iOS auto-zoom, full-width
+stacked primary actions), and a single `@media (min-width: 640px)` block
+opts into a roomier two-column desktop layout on top of that base — never
+the other way around. Wide tables (transaction lists) scroll horizontally
+within their own card instead of squeezing illegible columns onto a phone
+screen. Tested at iPhone viewport widths with Playwright throughout
+development.
+
+## Making the invoice credible to a finance reviewer
+
+An itemized list of amounts alone tends to draw follow-up questions. Each
+invoice instead answers them up front:
+
+- **Invoice number, "prepared for" employer, and business purpose** at the
+  top, so it reads as a discrete filed document, not a raw transaction dump.
+- **A plain-English description on every line** (e.g. "Airfare — business
+  travel booked with Austrian Airlines"), generated from the category — see
+  `describeTransaction()` in `categorization.js` — so no line item needs a
+  follow-up email to explain itself.
+- **An explicit "PAID IN FULL … no reimbursement is owed to the traveler"
+  callout**, naming the card used. This is the single biggest thing that
+  separates a SeeSight invoice from a typical reimbursement expense report:
+  the money already moved (in this prototype, in simulation) at time of
+  purchase, so the invoice is pure record-keeping, not a payment request.
+- **A signature line** ("Approved by … / Date"), so the PDF is ready to be
+  filed as-is once a manager signs off.
 
 ## Sandbox / mock boundaries
 

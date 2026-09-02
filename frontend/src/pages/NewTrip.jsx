@@ -9,6 +9,8 @@ const initialForm = {
   startDate: '',
   endDate: '',
   budget: '',
+  purpose: '',
+  employerName: '',
 };
 
 export default function NewTrip() {
@@ -76,6 +78,32 @@ export default function NewTrip() {
           <input id="budget" type="number" min="1" step="0.01" value={form.budget} onChange={set('budget')} placeholder="e.g. 1200" required />
         </div>
 
+        <h2 style={{ marginTop: 22 }}>For the invoice</h2>
+
+        <div className="field">
+          <label htmlFor="employerName">Employer / company name</label>
+          <input
+            id="employerName"
+            type="text"
+            value={form.employerName}
+            onChange={set('employerName')}
+            placeholder="e.g. Acme Consulting LLC"
+          />
+          <div className="hint">Shown as "Prepared for" on the invoice. Optional, but recommended for finance teams.</div>
+        </div>
+
+        <div className="field">
+          <label htmlFor="purpose">Business purpose</label>
+          <input
+            id="purpose"
+            type="text"
+            value={form.purpose}
+            onChange={set('purpose')}
+            placeholder="e.g. Client meetings and Q3 project kickoff"
+          />
+          <div className="hint">A short business justification for the trip — printed on the invoice.</div>
+        </div>
+
         {error && <div className="alert error">{error}</div>}
 
         <div className="alert info">
@@ -83,7 +111,7 @@ export default function NewTrip() {
           prototype). Submitting will charge the mock fee and issue a sandbox virtual card in one step.
         </div>
 
-        <button className="btn" type="submit" disabled={!canSubmit || submitting}>
+        <button className="btn block" type="submit" disabled={!canSubmit || submitting}>
           {submitting ? (
             <>
               <span className="spinner-inline" /> Paying &amp; issuing card…

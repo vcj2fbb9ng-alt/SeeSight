@@ -14,7 +14,7 @@ const CARD_FEE_CURRENCY = 'GEL';
 // Create a trip: mock-charges the one-time card fee, then issues a
 // sandbox virtual card scoped to the trip, in one call for a smooth demo.
 tripsRouter.post('/', async (req, res) => {
-  const { travelerName, name, destination, startDate, endDate, budget } = req.body || {};
+  const { travelerName, name, destination, startDate, endDate, budget, purpose, employerName } = req.body || {};
 
   const missing = ['travelerName', 'name', 'destination', 'startDate', 'endDate', 'budget'].filter(
     (field) => req.body?.[field] === undefined || req.body?.[field] === null || req.body?.[field] === ''
@@ -33,8 +33,8 @@ tripsRouter.post('/', async (req, res) => {
   const payment = await chargeCardIssuanceFee({ amount: CARD_FEE_AMOUNT, currency: CARD_FEE_CURRENCY });
 
   db.prepare(
-    `INSERT INTO trips (id, traveler_name, name, destination, start_date, end_date, budget, status, fee_paid, fee_amount, fee_currency, created_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, 'active', ?, ?, ?, ?)`
+    `INSERT INTO trips (id, traveler_name, name, destination, start_date, end_date, budget, purpose, employer_name, status, fee_paid, fee_amount, fee_currency, created_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'active', ?, ?, ?, ?)`
   ).run(
     tripId,
     travelerName,
@@ -43,6 +43,8 @@ tripsRouter.post('/', async (req, res) => {
     startDate,
     endDate,
     Number(budget),
+    purpose || '',
+    employerName || '',
     payment.status === 'succeeded' ? 1 : 0,
     CARD_FEE_AMOUNT,
     CARD_FEE_CURRENCY,

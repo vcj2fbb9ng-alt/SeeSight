@@ -8,6 +8,8 @@ export function serializeTrip(row) {
     startDate: row.start_date,
     endDate: row.end_date,
     budget: row.budget,
+    purpose: row.purpose,
+    employerName: row.employer_name,
     status: row.status,
     feePaid: !!row.fee_paid,
     feeAmount: row.fee_amount,
@@ -43,6 +45,7 @@ export function serializeTransaction(row) {
     amount: row.amount,
     currency: row.currency,
     category: row.category,
+    description: row.description,
     rawCategoryCode: row.raw_category_code,
     manuallyRecategorized: !!row.manually_recategorized,
     occurredAt: row.occurred_at,
@@ -54,6 +57,7 @@ export function serializeInvoice(row) {
   if (!row) return null;
   return {
     id: row.id,
+    invoiceNumber: row.invoice_number,
     tripId: row.trip_id,
     generatedAt: row.generated_at,
     totalAmount: row.total_amount,

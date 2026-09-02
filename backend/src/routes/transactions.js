@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { v4 as uuid } from 'uuid';
 import { db } from '../db.js';
-import { categorize, CATEGORIES } from '../services/categorization.js';
+import { categorize, describeTransaction, CATEGORIES } from '../services/categorization.js';
 import { serializeTransaction } from '../serializers.js';
 
 export const transactionsRouter = Router();
@@ -21,12 +21,13 @@ transactionsRouter.get('/presets', (req, res) => {
 
 function insertTransaction({ cardId, merchantName, mcc, amount, currency, occurredAt }) {
   const category = categorize({ merchantName, mcc });
+  const description = describeTransaction({ merchantName, category });
   const id = uuid();
   const now = new Date().toISOString();
   db.prepare(
-    `INSERT INTO transactions (id, card_id, merchant_name, mcc, amount, currency, category, raw_category_code, manually_recategorized, occurred_at, created_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?)`
-  ).run(id, cardId, merchantName, mcc || null, amount, currency || 'GEL', category, mcc || null, occurredAt || now, now);
+    `INSERT INTO transactions (id, card_id, merchant_name, mcc, amount, currency, category, description, raw_category_code, manually_recategorized, occurred_at, created_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?)`
+  ).run(id, cardId, merchantName, mcc || null, amount, currency || 'GEL', category, description, mcc || null, occurredAt || now, now);
   return db.prepare('SELECT * FROM transactions WHERE id = ?').get(id);
 }
 export { insertTransaction };
@@ -71,10 +72,10 @@ transactionsRouter.patch('/transactions/:id', (req, res) => {
     return res.status(400).json({ error: `category must be one of: ${CATEGORIES.join(', ')}` });
   }
 
-  db.prepare('UPDATE transactions SET category = ?, manually_recategorized = 1 WHERE id = ?').run(
-    category,
-    tx.id
-  );
+  const description = describeTransaction({ merchantName: tx.merchant_name, category });
+  db.prepare(
+    'UPDATE transactions SET category = ?, description = ?, manually_recategorized = 1 WHERE id = ?'
+  ).run(category, description, tx.id);
   const updated = db.prepare('SELECT * FROM transactions WHERE id = ?').get(tx.id);
   res.json(serializeTransaction(updated));
 });

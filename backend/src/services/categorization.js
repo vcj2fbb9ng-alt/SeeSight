@@ -66,3 +66,19 @@ function byMerchantName(merchantName) {
 export function categorize({ merchantName, mcc }) {
   return byMcc(mcc) || byMerchantName(merchantName) || 'Other';
 }
+
+// Generates the plain-English business-justification line that appears next
+// to each transaction on the invoice — this is what lets a finance reviewer
+// approve a line item without asking the traveler "what was this for?".
+const DESCRIPTION_TEMPLATES = {
+  Hotel: (m) => `Lodging — accommodation at ${m} during business travel`,
+  Flight: (m) => `Airfare — business travel booked with ${m}`,
+  Meals: (m) => `Business meal at ${m} during the trip`,
+  Transport: (m) => `Ground transportation — ${m}, business use`,
+  Other: (m) => `Trip-related business expense at ${m}`,
+};
+
+export function describeTransaction({ merchantName, category }) {
+  const template = DESCRIPTION_TEMPLATES[category] || DESCRIPTION_TEMPLATES.Other;
+  return template(merchantName);
+}

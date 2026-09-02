@@ -51,7 +51,7 @@ export default function InvoiceView() {
     );
   }
 
-  const { invoice, trip, transactions, subtotalsByCategory } = data;
+  const { invoice, trip, card, transactions, subtotalsByCategory } = data;
 
   return (
     <div className="container">
@@ -59,7 +59,7 @@ export default function InvoiceView() {
         <div>
           <h1>Invoice</h1>
           <div className="meta" style={{ marginTop: 4 }}>
-            <Link to={`/trips/${invoice.tripId}`}>{trip.name}</Link> · {trip.travelerName} · {trip.destination}
+            {invoice.invoiceNumber} · <Link to={`/trips/${invoice.tripId}`}>{trip.name}</Link>
           </div>
         </div>
         <a className="btn secondary" href={api.invoicePdfUrl(invoice.id)} target="_blank" rel="noreferrer">
@@ -70,60 +70,98 @@ export default function InvoiceView() {
       {error && <div className="alert error">{error}</div>}
       {sentNotice && <div className="alert success">{sentNotice}</div>}
 
+      <div className="alert success" style={{ fontWeight: 600 }}>
+        ✓ Paid in full — settled via SeeSight virtual corporate card{card ? ` ending ${card.last4}` : ''} at time of
+        purchase. No reimbursement is owed to the traveler; this invoice is for expense record-keeping only.
+      </div>
+
       <div className="card">
         <h2>Summary</h2>
-        <table>
-          <tbody>
-            <tr>
-              <td className="meta">Trip</td>
-              <td>{trip.name}</td>
-            </tr>
-            <tr>
-              <td className="meta">Traveler</td>
-              <td>{trip.travelerName}</td>
-            </tr>
-            <tr>
-              <td className="meta">Dates</td>
-              <td>
-                {trip.startDate} → {trip.endDate}
-              </td>
-            </tr>
-            <tr>
-              <td className="meta">Generated</td>
-              <td>{new Date(invoice.generatedAt).toLocaleString()}</td>
-            </tr>
-          </tbody>
-        </table>
+        <div className="kv-table">
+          <table>
+            <tbody>
+              <tr>
+                <td className="meta">Prepared for</td>
+                <td>{trip.employerName || 'Accounts Payable'}</td>
+              </tr>
+              <tr>
+                <td className="meta">Trip</td>
+                <td>{trip.name}</td>
+              </tr>
+              <tr>
+                <td className="meta">Traveler</td>
+                <td>{trip.travelerName}</td>
+              </tr>
+              <tr>
+                <td className="meta">Destination</td>
+                <td>{trip.destination}</td>
+              </tr>
+              <tr>
+                <td className="meta">Dates</td>
+                <td>
+                  {trip.startDate} → {trip.endDate}
+                </td>
+              </tr>
+              {trip.purpose && (
+                <tr>
+                  <td className="meta">Business purpose</td>
+                  <td>{trip.purpose}</td>
+                </tr>
+              )}
+              {card && (
+                <tr>
+                  <td className="meta">Card used</td>
+                  <td>
+                    {card.brand} {card.maskedNumber}
+                  </td>
+                </tr>
+              )}
+              <tr>
+                <td className="meta">Invoice #</td>
+                <td>{invoice.invoiceNumber}</td>
+              </tr>
+              <tr>
+                <td className="meta">Generated</td>
+                <td>{new Date(invoice.generatedAt).toLocaleString()}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <div className="card">
         <h2>
-          Transactions <span className="muted">({transactions.length})</span>
+          Itemized transactions <span className="muted">({transactions.length})</span>
         </h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Merchant</th>
-              <th>Category</th>
-              <th className="amount">Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            {transactions.map((tx) => (
-              <tr key={tx.id}>
-                <td>{tx.date.slice(0, 10)}</td>
-                <td>{tx.merchantName}</td>
-                <td>
-                  <span className={`badge category-${tx.category}`}>{tx.category}</span>
-                </td>
-                <td className="amount">
-                  {invoice.currency} {tx.amount.toFixed(2)}
-                </td>
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Merchant &amp; business purpose</th>
+                <th>Category</th>
+                <th className="amount">Amount</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {transactions.map((tx) => (
+                <tr key={tx.id}>
+                  <td style={{ whiteSpace: 'nowrap' }}>{tx.date.slice(0, 10)}</td>
+                  <td>
+                    <div style={{ fontWeight: 600 }}>{tx.merchantName}</div>
+                    {tx.description && <div className="meta" style={{ fontSize: 11.5, marginTop: 2 }}>{tx.description}</div>}
+                  </td>
+                  <td>
+                    <span className={`badge category-${tx.category}`}>{tx.category}</span>
+                  </td>
+                  <td className="amount">
+                    {invoice.currency} {tx.amount.toFixed(2)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <div className="card">
@@ -151,17 +189,15 @@ export default function InvoiceView() {
         {invoice.sentToCompany ? (
           <div className="alert success">Already sent to {recipient} on {new Date(invoice.sentAt).toLocaleString()}.</div>
         ) : (
-          <form className="row" onSubmit={handleSend} style={{ alignItems: 'end' }}>
-            <div className="field" style={{ marginBottom: 0, gridColumn: '1 / -1' }}>
+          <form onSubmit={handleSend}>
+            <div className="field">
               <label htmlFor="recipient">Company email (mock)</label>
               <input id="recipient" type="email" value={recipient} onChange={(e) => setRecipient(e.target.value)} />
               <div className="hint">This logs a mock email on the backend — no real email is sent in this prototype.</div>
             </div>
-            <div style={{ gridColumn: '1 / -1' }}>
-              <button className="btn" type="submit" disabled={sending}>
-                {sending ? 'Sending…' : '✉️ Send to company'}
-              </button>
-            </div>
+            <button className="btn block" type="submit" disabled={sending}>
+              {sending ? 'Sending…' : '✉️ Send to company'}
+            </button>
           </form>
         )}
       </div>

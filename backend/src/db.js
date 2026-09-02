@@ -24,6 +24,8 @@ db.exec(`
     start_date TEXT NOT NULL,
     end_date TEXT NOT NULL,
     budget REAL NOT NULL,
+    purpose TEXT NOT NULL DEFAULT '',
+    employer_name TEXT NOT NULL DEFAULT '',
     status TEXT NOT NULL DEFAULT 'active', -- active | completed
     fee_paid INTEGER NOT NULL DEFAULT 0,
     fee_amount REAL NOT NULL DEFAULT 3,
@@ -53,6 +55,7 @@ db.exec(`
     amount REAL NOT NULL,
     currency TEXT NOT NULL DEFAULT 'GEL',
     category TEXT NOT NULL,
+    description TEXT NOT NULL DEFAULT '',
     raw_category_code TEXT,
     manually_recategorized INTEGER NOT NULL DEFAULT 0,
     occurred_at TEXT NOT NULL,
@@ -61,6 +64,7 @@ db.exec(`
 
   CREATE TABLE IF NOT EXISTS invoices (
     id TEXT PRIMARY KEY,
+    invoice_number TEXT NOT NULL DEFAULT '',
     trip_id TEXT NOT NULL REFERENCES trips(id),
     generated_at TEXT NOT NULL,
     total_amount REAL NOT NULL,

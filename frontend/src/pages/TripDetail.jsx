@@ -103,6 +103,13 @@ export default function TripDetail() {
           <div className="meta" style={{ marginTop: 4 }}>
             {trip.destination} · {trip.startDate} → {trip.endDate} · {trip.travelerName}
           </div>
+          {(trip.purpose || trip.employerName) && (
+            <div className="meta" style={{ marginTop: 2 }}>
+              {trip.purpose && <>Purpose: {trip.purpose}</>}
+              {trip.purpose && trip.employerName && ' · '}
+              {trip.employerName && <>For: {trip.employerName}</>}
+            </div>
+          )}
         </div>
         <span className={`badge ${trip.status}`}>{trip.status}</span>
       </div>
@@ -183,7 +190,7 @@ export default function TripDetail() {
             />
           </div>
           <div style={{ gridColumn: '1 / -1' }}>
-            <button className="btn secondary" type="submit" disabled={busy || !customTx.merchantName || !customTx.amount}>
+            <button className="btn secondary block" type="submit" disabled={busy || !customTx.merchantName || !customTx.amount}>
               Simulate custom transaction
             </button>
           </div>
@@ -197,46 +204,51 @@ export default function TripDetail() {
         {transactions.length === 0 ? (
           <p className="meta">No transactions yet — simulate one above.</p>
         ) : (
-          <table>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Merchant</th>
-                <th>Category</th>
-                <th className="amount">Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              {transactions.map((tx) => (
-                <tr key={tx.id}>
-                  <td>{tx.occurredAt.slice(0, 10)}</td>
-                  <td>{tx.merchantName}</td>
-                  <td>
-                    <select
-                      value={tx.category}
-                      onChange={(e) => recategorize(tx.id, e.target.value)}
-                      disabled={busy}
-                      style={{ width: 'auto', padding: '4px 8px', fontSize: 12.5 }}
-                    >
-                      {CATEGORIES.map((c) => (
-                        <option key={c} value={c}>
-                          {c}
-                        </option>
-                      ))}
-                    </select>
-                    {tx.manuallyRecategorized && (
-                      <span className="meta" style={{ marginLeft: 6, fontSize: 11 }}>
-                        (edited)
-                      </span>
-                    )}
-                  </td>
-                  <td className="amount">
-                    {tx.currency} {tx.amount.toFixed(2)}
-                  </td>
+          <div className="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Merchant</th>
+                  <th>Category</th>
+                  <th className="amount">Amount</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {transactions.map((tx) => (
+                  <tr key={tx.id}>
+                    <td>{tx.occurredAt.slice(0, 10)}</td>
+                    <td>
+                      <div>{tx.merchantName}</div>
+                      {tx.description && <div className="meta" style={{ fontSize: 11, marginTop: 2 }}>{tx.description}</div>}
+                    </td>
+                    <td>
+                      <select
+                        value={tx.category}
+                        onChange={(e) => recategorize(tx.id, e.target.value)}
+                        disabled={busy}
+                        style={{ width: 'auto', padding: '4px 8px', fontSize: 12.5 }}
+                      >
+                        {CATEGORIES.map((c) => (
+                          <option key={c} value={c}>
+                            {c}
+                          </option>
+                        ))}
+                      </select>
+                      {tx.manuallyRecategorized && (
+                        <span className="meta" style={{ marginLeft: 6, fontSize: 11 }}>
+                          (edited)
+                        </span>
+                      )}
+                    </td>
+                    <td className="amount">
+                      {tx.currency} {tx.amount.toFixed(2)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
 

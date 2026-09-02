@@ -1,3 +1,7 @@
+/* Mobile-first: base rules below target small screens; layout is enhanced
+   for wider viewports inside the `@media (min-width: 640px)` block near the
+   bottom of this file, not the other way around. */
+
 :root {
   --bg: #f6f7fb;
   --surface: #ffffff;
@@ -16,6 +20,7 @@
   --radius: 10px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   color-scheme: light;
+  -webkit-text-size-adjust: 100%;
 }
 
 * {
@@ -43,10 +48,14 @@ a {
 }
 
 .topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 28px;
+  gap: 10px;
+  padding: 12px 16px;
   background: var(--surface);
   border-bottom: 1px solid var(--border);
 }
@@ -57,44 +66,46 @@ a {
   gap: 8px;
   text-decoration: none;
   color: var(--text);
+  min-width: 0;
 }
 
 .brand strong {
-  font-size: 20px;
+  font-size: 18px;
   letter-spacing: -0.02em;
 }
 
 .brand span {
   font-size: 12px;
   color: var(--text-muted);
+  display: none;
 }
 
 .container {
   max-width: 880px;
   margin: 0 auto;
-  padding: 28px 20px 64px;
+  padding: 16px 16px 48px;
 }
 
 .page-header {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
-  gap: 12px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  gap: 10px;
 }
 
 .page-header h1 {
-  font-size: 22px;
+  font-size: 20px;
   margin: 0;
+  line-height: 1.25;
 }
 
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 20px;
-  margin-bottom: 18px;
+  padding: 16px;
+  margin-bottom: 14px;
 }
 
 .card h2 {
@@ -111,17 +122,25 @@ a {
 .btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   border: 1px solid transparent;
   background: var(--primary);
   color: #fff;
-  padding: 9px 16px;
+  padding: 12px 16px;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
   text-decoration: none;
   transition: background 0.15s ease;
+  min-height: 44px; /* comfortable touch target */
+}
+
+/* Full-width, stacked call-to-action buttons by default — the natural
+   mobile pattern; widened layouts opt back into inline sizing below. */
+.btn.block {
+  width: 100%;
 }
 
 .btn:hover {
@@ -179,12 +198,14 @@ input[type='date'],
 input[type='email'],
 select {
   width: 100%;
-  padding: 9px 11px;
+  padding: 11px 12px;
   border: 1px solid var(--border);
   border-radius: 8px;
-  font-size: 14px;
+  /* 16px stops iOS Safari auto-zooming the page on focus */
+  font-size: 16px;
   background: #fff;
   color: var(--text);
+  min-height: 44px;
 }
 
 input:focus,
@@ -195,7 +216,7 @@ select:focus {
 
 .row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 14px;
 }
 
@@ -251,12 +272,14 @@ select:focus {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 10px;
   padding: 14px 16px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   text-decoration: none;
   color: var(--text);
+  min-height: 44px;
 }
 
 .trip-row:hover {
@@ -279,7 +302,8 @@ select:focus {
   background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 55%, #a21caf 100%);
   color: #fff;
   border-radius: 16px;
-  padding: 22px 24px;
+  padding: 18px 20px;
+  width: 100%;
   max-width: 380px;
   box-shadow: 0 12px 24px -12px rgba(79, 70, 229, 0.45);
   margin-bottom: 6px;
@@ -288,21 +312,23 @@ select:focus {
 .card-visual .card-brand {
   display: flex;
   justify-content: space-between;
-  font-size: 13px;
+  font-size: 12.5px;
   opacity: 0.85;
-  margin-bottom: 26px;
+  margin-bottom: 22px;
 }
 
 .card-visual .card-number {
-  font-size: 20px;
-  letter-spacing: 0.08em;
+  font-size: clamp(16px, 5.5vw, 20px);
+  letter-spacing: 0.06em;
   font-variant-numeric: tabular-nums;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
+  white-space: nowrap;
 }
 
 .card-visual .card-foot {
   display: flex;
   justify-content: space-between;
+  gap: 10px;
   font-size: 12px;
   opacity: 0.9;
 }
@@ -316,10 +342,35 @@ select:focus {
   margin-bottom: 2px;
 }
 
+/* Tables scroll horizontally within their own card on narrow screens
+   instead of squeezing columns illegible or breaking the page layout. */
+.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 0 -16px;
+  padding: 0 16px;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
   font-size: 13.5px;
+}
+
+/* Only tables with several data columns (transaction lists) need a forced
+   min-width to stay legible — simple label/value tables size naturally. */
+.table-wrap table {
+  min-width: 480px;
+}
+
+.kv-table td {
+  padding: 8px 4px;
+}
+
+.kv-table td:first-child {
+  width: 40%;
+  white-space: nowrap;
+  padding-right: 10px;
 }
 
 th {
@@ -330,10 +381,11 @@ th {
   color: var(--text-muted);
   padding: 8px 8px;
   border-bottom: 1px solid var(--border);
+  white-space: nowrap;
 }
 
 td {
-  padding: 10px 8px;
+  padding: 12px 8px;
   border-bottom: 1px solid #f1f2f6;
   vertical-align: middle;
 }
@@ -358,7 +410,8 @@ tr:last-child td {
 .preset-btn {
   border: 1px dashed var(--border);
   background: #fafafa;
-  padding: 8px 12px;
+  padding: 10px 14px;
+  min-height: 40px;
   border-radius: 8px;
   font-size: 12.5px;
   cursor: pointer;
@@ -449,8 +502,12 @@ tr:last-child td {
 
 .actions-row {
   display: flex;
+  flex-direction: column;
   gap: 10px;
-  flex-wrap: wrap;
+}
+
+.actions-row .btn {
+  width: 100%;
 }
 
 .section-title {
@@ -464,4 +521,56 @@ tr:last-child td {
 
 .link-plain {
   text-decoration: none;
+}
+
+/* ---- Wider viewports: opt into a roomier desktop layout ---- */
+@media (min-width: 640px) {
+  .topbar {
+    padding: 16px 28px;
+  }
+
+  .brand span {
+    display: inline;
+  }
+
+  .container {
+    padding: 28px 20px 64px;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  .page-header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .page-header h1 {
+    font-size: 22px;
+  }
+
+  .row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .actions-row {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .actions-row .btn {
+    width: auto;
+  }
+
+  .btn.block {
+    width: auto;
+  }
+
+  .table-wrap {
+    margin: 0;
+    padding: 0;
+  }
 }

@@ -13,6 +13,14 @@ const INVOICES_DIR = process.env.INVOICES_DIR
   ? path.resolve(process.cwd(), process.env.INVOICES_DIR)
   : path.resolve(process.cwd(), 'invoices');
 
+// Human-readable, sequential-looking invoice number — e.g. SS-202609-4F8A1C
+// — the kind of reference a finance/AP system expects to file against,
+// rather than a raw UUID.
+function buildInvoiceNumber(trip, invoiceId) {
+  const yearMonth = (trip.start_date || '').slice(0, 7).replace('-', '') || 'TRIP';
+  return `SS-${yearMonth}-${invoiceId.replace(/-/g, '').slice(0, 6).toUpperCase()}`;
+}
+
 export async function generateInvoiceForTrip(trip) {
   const card = db.prepare('SELECT * FROM cards WHERE trip_id = ?').get(trip.id);
   const transactions = card
@@ -32,14 +40,24 @@ export async function generateInvoiceForTrip(trip) {
   }
 
   const invoiceId = uuid();
+  const invoiceNumber = buildInvoiceNumber(trip, invoiceId);
   const pdfPath = path.join(INVOICES_DIR, `${invoiceId}.pdf`);
-  await renderInvoicePdf({ trip, transactions, subtotalsByCategory, total, currency, outPath: pdfPath });
+  await renderInvoicePdf({
+    trip,
+    card,
+    invoiceNumber,
+    transactions,
+    subtotalsByCategory,
+    total,
+    currency,
+    outPath: pdfPath,
+  });
 
   const now = new Date().toISOString();
   db.prepare(
-    `INSERT INTO invoices (id, trip_id, generated_at, total_amount, currency, pdf_path, sent_to_company, sent_at)
-     VALUES (?, ?, ?, ?, ?, ?, 0, NULL)`
-  ).run(invoiceId, trip.id, now, total, currency, pdfPath);
+    `INSERT INTO invoices (id, invoice_number, trip_id, generated_at, total_amount, currency, pdf_path, sent_to_company, sent_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, 0, NULL)`
+  ).run(invoiceId, invoiceNumber, trip.id, now, total, currency, pdfPath);
 
   return db.prepare('SELECT * FROM invoices WHERE id = ?').get(invoiceId);
 }
@@ -67,13 +85,19 @@ invoicesRouter.get('/:id', (req, res) => {
       destination: trip.destination,
       startDate: trip.start_date,
       endDate: trip.end_date,
+      purpose: trip.purpose,
+      employerName: trip.employer_name,
       status: trip.status,
     },
+    card: card
+      ? { maskedNumber: card.masked_number, last4: card.last4, brand: card.brand, provider: card.provider }
+      : null,
     transactions: transactions.map((tx) => ({
       id: tx.id,
       date: tx.occurred_at,
       merchantName: tx.merchant_name,
       category: tx.category,
+      description: tx.description,
       amount: tx.amount,
     })),
     subtotalsByCategory,
