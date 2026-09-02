@@ -8,14 +8,15 @@ export default function App() {
   return (
     <>
       <div className="sandbox-banner">
-        SANDBOX / TEST MODE — no real cards are issued and no real money moves
+        <span>🧪 SANDBOX / TEST MODE — no real cards are issued and no real money moves</span>
       </div>
       <header className="topbar">
         <Link to="/" className="brand">
+          <span className="brand-mark" aria-hidden="true" />
           <strong>SeeSight</strong>
           <span>trip expense cards</span>
         </Link>
-        <Link to="/new" className="btn">
+        <Link to="/new" className="btn sm">
           + New trip
         </Link>
       </header>

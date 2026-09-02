@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { api } from '../api.js';
+import { categoryStyle } from '../categoryStyle.js';
 
 export default function InvoiceView() {
   const { invoiceId } = useParams();
@@ -62,7 +63,7 @@ export default function InvoiceView() {
             {invoice.invoiceNumber} · <Link to={`/trips/${invoice.tripId}`}>{trip.name}</Link>
           </div>
         </div>
-        <a className="btn secondary" href={api.invoicePdfUrl(invoice.id)} target="_blank" rel="noreferrer">
+        <a className="btn secondary sm" href={api.invoicePdfUrl(invoice.id)} target="_blank" rel="noreferrer">
           ⬇ Download PDF
         </a>
       </div>
@@ -70,9 +71,13 @@ export default function InvoiceView() {
       {error && <div className="alert error">{error}</div>}
       {sentNotice && <div className="alert success">{sentNotice}</div>}
 
-      <div className="alert success" style={{ fontWeight: 600 }}>
-        ✓ Paid in full — settled via SeeSight virtual corporate card{card ? ` ending ${card.last4}` : ''} at time of
-        purchase. No reimbursement is owed to the traveler; this invoice is for expense record-keeping only.
+      <div className="payout-callout">
+        <div className="payout-icon">✓</div>
+        <div>
+          <strong>Paid in full</strong>
+          Settled via SeeSight virtual corporate card{card ? ` ending ${card.last4}` : ''} at time of purchase. No
+          reimbursement is owed to the traveler — this invoice is for expense record-keeping only.
+        </div>
       </div>
 
       <div className="card">
@@ -144,21 +149,49 @@ export default function InvoiceView() {
               </tr>
             </thead>
             <tbody>
-              {transactions.map((tx) => (
-                <tr key={tx.id}>
-                  <td style={{ whiteSpace: 'nowrap' }}>{tx.date.slice(0, 10)}</td>
-                  <td>
-                    <div style={{ fontWeight: 600 }}>{tx.merchantName}</div>
-                    {tx.description && <div className="meta" style={{ fontSize: 11.5, marginTop: 2 }}>{tx.description}</div>}
-                  </td>
-                  <td>
-                    <span className={`badge category-${tx.category}`}>{tx.category}</span>
-                  </td>
-                  <td className="amount">
-                    {invoice.currency} {tx.amount.toFixed(2)}
-                  </td>
-                </tr>
-              ))}
+              {transactions.map((tx) => {
+                const style = categoryStyle(tx.category);
+                return (
+                  <tr key={tx.id}>
+                    <td style={{ whiteSpace: 'nowrap' }} className="meta">
+                      {tx.date.slice(0, 10)}
+                    </td>
+                    <td>
+                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                        <div
+                          style={{
+                            width: 30,
+                            height: 30,
+                            borderRadius: 9,
+                            background: style.bg,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: 14,
+                            flexShrink: 0,
+                          }}
+                        >
+                          {style.icon}
+                        </div>
+                        <div>
+                          <div style={{ fontWeight: 650 }}>{tx.merchantName}</div>
+                          {tx.description && (
+                            <div className="meta" style={{ fontSize: 11.5, marginTop: 2 }}>
+                              {tx.description}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <span className={`badge category-${tx.category}`}>{tx.category}</span>
+                    </td>
+                    <td className="amount">
+                      {invoice.currency} {tx.amount.toFixed(2)}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

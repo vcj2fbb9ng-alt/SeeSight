@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { api } from '../api.js';
+import { categoryStyle } from '../categoryStyle.js';
 
 const CATEGORIES = ['Hotel', 'Flight', 'Meals', 'Transport', 'Other'];
 
@@ -122,23 +123,31 @@ export default function TripDetail() {
         {card ? (
           <>
             <div className="card-visual">
-              <div className="card-brand">
-                <span>SeeSight · {card.brand}</span>
-                <span>{card.status === 'active' ? 'Active' : card.status}</span>
+              <div className="card-toprow">
+                <div>
+                  <div className="card-chip" />
+                  <div className="card-status">{card.status === 'active' ? 'Active' : card.status}</div>
+                </div>
+                <div className="card-brand-mark">
+                  <small>SeeSight</small>
+                  {card.brand}
+                </div>
               </div>
               <div className="card-number">{card.maskedNumber}</div>
               <div className="card-foot">
                 <div>
                   <span className="label">Cardholder</span>
-                  {trip.travelerName}
+                  <span className="value">{trip.travelerName}</span>
                 </div>
                 <div>
                   <span className="label">Expires</span>
-                  {String(card.expMonth).padStart(2, '0')}/{card.expYear}
+                  <span className="value mono">
+                    {String(card.expMonth).padStart(2, '0')}/{card.expYear}
+                  </span>
                 </div>
               </div>
             </div>
-            <div className="actions-row" style={{ marginTop: 12 }}>
+            <div className="actions-row" style={{ marginTop: 14 }}>
               <button type="button" className="btn secondary" disabled title="Wallet provisioning is mocked in this prototype">
                 🍎 Add to Apple Pay
               </button>
@@ -204,30 +213,30 @@ export default function TripDetail() {
         {transactions.length === 0 ? (
           <p className="meta">No transactions yet — simulate one above.</p>
         ) : (
-          <div className="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Merchant</th>
-                  <th>Category</th>
-                  <th className="amount">Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                {transactions.map((tx) => (
-                  <tr key={tx.id}>
-                    <td>{tx.occurredAt.slice(0, 10)}</td>
-                    <td>
-                      <div>{tx.merchantName}</div>
-                      {tx.description && <div className="meta" style={{ fontSize: 11, marginTop: 2 }}>{tx.description}</div>}
-                    </td>
-                    <td>
+          <div className="tx-list">
+            {transactions.map((tx) => {
+              const style = categoryStyle(tx.category);
+              return (
+                <div className="tx-row" key={tx.id}>
+                  <div className="tx-icon" style={{ background: style.bg }}>
+                    {style.icon}
+                  </div>
+                  <div className="tx-body">
+                    <div className="tx-top">
+                      <div className="tx-merchant">{tx.merchantName}</div>
+                      <div className="tx-amount">
+                        {tx.currency} {tx.amount.toFixed(2)}
+                      </div>
+                    </div>
+                    {tx.description && <div className="tx-desc">{tx.description}</div>}
+                    <div className="tx-meta-row">
+                      <span className="tx-date-chip">{tx.occurredAt.slice(0, 10)}</span>
                       <select
+                        className="cat-select"
                         value={tx.category}
                         onChange={(e) => recategorize(tx.id, e.target.value)}
                         disabled={busy}
-                        style={{ width: 'auto', padding: '4px 8px', fontSize: 12.5 }}
+                        style={{ backgroundColor: style.bg, color: style.fg }}
                       >
                         {CATEGORIES.map((c) => (
                           <option key={c} value={c}>
@@ -235,19 +244,12 @@ export default function TripDetail() {
                           </option>
                         ))}
                       </select>
-                      {tx.manuallyRecategorized && (
-                        <span className="meta" style={{ marginLeft: 6, fontSize: 11 }}>
-                          (edited)
-                        </span>
-                      )}
-                    </td>
-                    <td className="amount">
-                      {tx.currency} {tx.amount.toFixed(2)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                      {tx.manuallyRecategorized && <span className="tx-edited-tag">edited</span>}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>

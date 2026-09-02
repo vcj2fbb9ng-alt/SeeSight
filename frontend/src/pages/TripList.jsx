@@ -17,7 +17,7 @@ export default function TripList() {
     <div className="container">
       <div className="page-header">
         <h1>Trips</h1>
-        <Link to="/new" className="btn">
+        <Link to="/new" className="btn sm">
           + New trip
         </Link>
       </div>
@@ -28,7 +28,8 @@ export default function TripList() {
 
       {trips && trips.length === 0 && (
         <div className="empty-state card">
-          <p>No trips yet.</p>
+          <div className="empty-icon">🧳</div>
+          <p>No trips yet — request a card to get started.</p>
           <Link to="/new" className="btn">
             Request your first trip card
           </Link>

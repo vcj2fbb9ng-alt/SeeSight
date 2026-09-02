@@ -107,8 +107,11 @@ export default function NewTrip() {
         {error && <div className="alert error">{error}</div>}
 
         <div className="alert info">
-          One-time card issuance fee: <strong>3 GEL</strong> (mock payment — no real card is charged in this
-          prototype). Submitting will charge the mock fee and issue a sandbox virtual card in one step.
+          <span>💳</span>
+          <span>
+            One-time card issuance fee: <strong>3 GEL</strong> (mock payment — no real card is charged in this
+            prototype). Submitting will charge the mock fee and issue a sandbox virtual card in one step.
+          </span>
         </div>
 
         <button className="btn block" type="submit" disabled={!canSubmit || submitting}>
