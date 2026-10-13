@@ -136,13 +136,13 @@ home = f"""
     {feature_blocks([
         ("01", "Receipts turn into expenses on their own.",
          "Add a photo or a file. SeeSight reads the merchant, date and amount and creates the expense record. You only check it.",
-         phone("phone-1-receipt"), "is-lime"),
+         phone("phone-1-receipt"), ""),
         ("02", "Problems show up before the claim is sent.",
          "Over a limit? Possible duplicate? Travelers see it while they can still fix it, so accountants get fewer surprises.",
          phone("phone-2-claim"), ""),
         ("03", "A clear decision, with a clear record.",
          "The accountant approves, rejects, approves part of it or asks for a document, with one comment. The traveler gets an email and a PDF that includes the receipt image.",
-         browser("web-3-decision"), "is-navy"),
+         browser("web-3-decision"), ""),
     ])}
   </div>
 </section>
@@ -285,7 +285,7 @@ accountants = f"""
         <p class="lead">Rules are checked from top to bottom, and the first one that matches decides. Reorder them with the arrows at any time.
           If nothing matches, the expense is marked Maybe for you to look at.</p>
       </div>
-      <div class="feature-visual is-lime reveal" style="--d:.1s">{browser("web-5-rules")}</div>
+      <div class="feature-visual reveal" style="--d:.1s">{browser("web-5-rules")}</div>
     </div>
   </div>
 </section>
@@ -418,16 +418,16 @@ how = f"""
     {feature_blocks([
         ("Step 1", "The receipt becomes an expense.",
          "The traveler takes a photo or uploads a file in the phone browser. SeeSight reads it and creates an expense record with the merchant, date and amount.",
-         phone("phone-1-receipt"), "is-lime"),
+         phone("phone-1-receipt"), ""),
         ("Step 2", "The traveler checks, adds the purpose and sends.",
          "Anything over a limit or that looks like a duplicate is flagged first. Per diem and lost receipts are handled in the same flow.",
          phone("phone-2-claim"), ""),
         ("Step 3", "One accountant decides.",
          "The claim goes to the traveler's one assigned accountant, already checked against the rules. They decide with one comment.",
-         browser("web-3-decision"), "is-navy"),
+         browser("web-3-decision"), ""),
         ("Step 4", "Everyone knows the outcome.",
          "The traveler gets an email with the decision. The claim can be exported as a PDF that includes the receipt image.",
-         phone("phone-4-decision"), "is-lime"),
+         phone("phone-4-decision"), ""),
     ])}
   </div>
 </section>

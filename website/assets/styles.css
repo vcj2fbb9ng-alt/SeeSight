@@ -346,8 +346,6 @@ ul, ol { margin: 0; padding: 0; }
 .feature-visual {
   border-radius: var(--radius-xl); background: var(--bg-soft); padding: clamp(28px, 4vw, 56px); display: grid; place-items: center; min-height: 460px; overflow: hidden; position: relative;
 }
-.feature-visual.is-lime { background: var(--accent); }
-.feature-visual.is-navy { background: var(--navy); }
 .feature-visual .phone { width: min(240px, 70%); }
 .feature-visual .browser { width: 100%; }
 @media (max-width: 860px) {
