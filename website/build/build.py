@@ -68,18 +68,6 @@ home = f"""
   </div>
 </section>
 
-<section class="section-tight" aria-labelledby="stats-title">
-  <div class="wrap">
-    <h2 class="sr-only" id="stats-title">SeeSight in numbers</h2>
-    <div class="stats">
-      <div class="stat reveal"><span class="stat-num" data-count="3">3</span><span class="stat-label">roles: travelers, accountants and companies</span></div>
-      <div class="stat is-lime reveal" style="--d:.08s"><span class="stat-num" data-count="1">1</span><span class="stat-label">assigned accountant per traveler</span></div>
-      <div class="stat reveal" style="--d:.16s"><span class="stat-num" data-count="4">4</span><span class="stat-label">ways to decide: approve, reject, approve part, ask for a document</span></div>
-      <div class="stat is-navy reveal" style="--d:.24s"><span class="stat-num" data-count="1">1</span><span class="stat-label">PDF export, with the receipt image included</span></div>
-    </div>
-  </div>
-</section>
-
 <section class="section" aria-labelledby="roles-title">
   <div class="wrap">
     <div class="section-head center reveal">

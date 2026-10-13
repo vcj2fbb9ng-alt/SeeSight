@@ -82,8 +82,20 @@
     if (typeof HTMLDialogElement !== "function") return false;
     if (!modal) buildModal();
     var body = modal.querySelector(".modal-body");
-    // The iframe is only created on first open, so pages stay fast.
-    if (!body.querySelector("iframe")) {
+    if (window.SEESIGHT_NO_EMBED) {
+      // Hosts that forbid embedding other sites (e.g. a preview viewer) get a booking card instead.
+      if (!body.querySelector(".modal-fallback")) {
+        body.innerHTML =
+          '<div class="modal-fallback">' +
+            '<span class="eyebrow">30-minute demo</span>' +
+            "<h3>Pick a time that suits you</h3>" +
+            "<p>We'll walk you through SeeSight for travelers, accountants and your company, and answer your questions.</p>" +
+            '<a class="btn btn-lg" href="' + CAL_URL + '" target="_blank" rel="noopener">Choose a time</a>' +
+          "</div>";
+        modal.querySelector(".modal-foot span").remove();
+      }
+    } else if (!body.querySelector("iframe")) {
+      // The iframe is only created on first open, so pages stay fast.
       var frame = document.createElement("iframe");
       frame.src = CAL_URL + "?embed=true&layout=month_view";
       frame.title = "Book a 30-minute SeeSight demo (Cal.com)";

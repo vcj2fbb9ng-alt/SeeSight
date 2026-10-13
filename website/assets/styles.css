@@ -631,3 +631,10 @@ ul, ol { margin: 0; padding: 0; }
   .stage .phone { width: 40%; right: -6px; bottom: -64px; }
 }
 .stage > .browser .placeholder-tag { left: 20px; transform: none; }
+.modal-fallback { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 32px 24px; text-align: center; }
+.modal-fallback h3 { font-size: clamp(28px, 4vw, 40px); max-width: 16ch; }
+.modal-fallback p { color: var(--ink-2); max-width: 46ch; }
+.modal-fallback .btn { margin-top: 8px; }
+.modal-inner:has(.modal-fallback) { height: auto; }
+.modal-body:has(.modal-fallback) { flex: none; }
+.modal-body .modal-fallback { position: static; padding: clamp(48px, 8vw, 80px) 24px; }
