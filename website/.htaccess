@@ -2,11 +2,14 @@
 # /traveler -> traveler.html, /accountant -> accountant.html, /company -> company.html, /howitworks -> howitworks.html
 Options -MultiViews
 DirectoryIndex index.html
+ErrorDocument 404 /404.html
 RewriteEngine On
 
-# Always use the secure address (https)
-RewriteCond %{HTTPS} off
-RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# One official address: https and no www (www.seesight.net -> seesight.net)
+RewriteCond %{HTTPS} off [OR]
+RewriteCond %{HTTP_HOST} ^www\. [NC]
+RewriteCond %{HTTP_HOST} ^(?:www\.)?(.+)$ [NC]
+RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
 
 # Old addresses keep working: send them to the new clean ones
 RewriteRule ^travelers(\.html)?/?$ /traveler [R=301,L]
@@ -26,3 +29,29 @@ RewriteRule ^([a-z-]+)/$ /$1 [R=301,L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME}.html -f
 RewriteRule ^([a-z-]+)$ $1.html [L]
+
+# Speed: compress text files
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript text/javascript application/json image/svg+xml application/xml text/xml text/plain
+</IfModule>
+
+# Speed: let browsers keep files. Pages are re-checked every time; the CSS and JS
+# links carry a version (?v=...), so they can be kept for a year.
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault "access plus 1 month"
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType text/javascript "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 month"
+  ExpiresByType image/png "access plus 1 month"
+  ExpiresByType application/xml "access plus 1 day"
+  ExpiresByType text/xml "access plus 1 day"
+  ExpiresByType text/plain "access plus 1 day"
+</IfModule>
+<IfModule mod_headers.c>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>

@@ -8,7 +8,9 @@ fallback. Without JavaScript the same buttons simply link to Cal.com.
 ```
 website/
   index.html, traveler.html, accountant.html, company.html, howitworks.html
-  .htaccess           clean addresses (/traveler, /accountant, /company, /howitworks), https, old-URL redirects
+  404.html            page-not-found page (absolute paths, kept out of search results)
+  robots.txt, sitemap.xml, favicon.ico   for search engines and browsers
+  .htaccess           https + no-www, compression, caching, clean addresses (/traveler, /accountant, /company, /howitworks), https, old-URL redirects
   assets/styles.css   design tokens, layout, components
   assets/main.js      nav, mobile menu, demo popup, reveals, count-ups, tabs, FAQ, rules demo
   assets/logo.png, assets/logo-mark.png   logo and favicon
@@ -46,3 +48,10 @@ overwrite them.
 
 Upload the contents of `website/` (the `build/` folder is not needed), including the hidden `.htaccess`, to an Apache host such as cPanel. The `.htaccess` file gives the pages clean addresses without `.html`. On other static hosts (
 Netlify, Vercel, Cloudflare Pages) turn on their "pretty URLs" option instead. The site must sit at the domain root.
+
+## SEO
+
+Each page has its own title, description, official (canonical) address, social preview image
+(`assets/og-image.png`) and structured data (organisation, product, breadcrumbs, FAQ) generated in
+`build/partials.py`. When a page is added or its address changes, add it to `sitemap()` in
+`build/build.py` and bump `SITEMAP_DATE`.

@@ -37,7 +37,7 @@ home = f"""
   <div class="wrap">
     <span class="eyebrow reveal">Business travel expenses</span>
     <h1 class="display reveal" style="--d:.05s">Travel for work. <span class="serif">Not</span> for paperwork.</h1>
-    <p class="lead reveal" style="--d:.1s">SeeSight removes the hidden financial stress of business travel. Add a receipt, SeeSight reads it,
+    <p class="lead reveal" style="--d:.1s">SeeSight is business travel expense software that removes the hidden financial stress of travelling for work. Add a receipt, SeeSight reads it,
       and your assigned accountant decides. Everyone always knows where a claim stands.</p>
     <div class="actions reveal" style="--d:.15s">
       {demo_btn(cls="btn btn-lg")}
@@ -199,7 +199,7 @@ travelers = f"""
     <span class="eyebrow reveal">For travelers</span>
     <h1 class="display reveal" style="--d:.05s">Snap the receipt. <span class="serif">Know</span> where it stands.</h1>
     <p class="lead reveal" style="--d:.1s">No more shoeboxes of receipts or wondering when you'll be paid back. Add a receipt in your phone browser,
-      check what SeeSight read, and send it to your accountant.</p>
+      check what SeeSight read, and send the expense claim to your accountant.</p>
     <div class="actions reveal" style="--d:.15s">{demo_btn(cls="btn btn-lg")}</div>
     <div class="phones reveal" style="--d:.2s">
       {phone("phone-1-receipt", eager=True)}
@@ -398,7 +398,7 @@ how = f"""
   <div class="wrap">
     <span class="eyebrow reveal">How it works</span>
     <h1 class="display reveal" style="--d:.05s">From receipt to decision in <span class="serif">four</span> steps.</h1>
-    <p class="lead reveal" style="--d:.1s">One simple flow connects the traveler and their accountant, with the company seeing everything.</p>
+    <p class="lead reveal" style="--d:.1s">One simple expense claim flow connects the traveler and their accountant, with the company seeing everything.</p>
     <ol class="flow">
       <li class="reveal"><span class="dot">1</span><span class="who">Traveler</span><h3>Add a receipt</h3><p>A photo or a file. SeeSight reads it and creates the expense.</p></li>
       <li class="reveal" style="--d:.1s"><span class="dot">2</span><span class="who">Traveler</span><h3>Check and send</h3><p>Confirm the details, add the trip purpose and send it to the accountant.</p></li>
@@ -457,19 +457,60 @@ how = f"""
 """
 
 PAGES = [
-    ("index.html", "SeeSight: business travel expenses without the stress",
-     "SeeSight removes the hidden financial stress of business travel. Add a receipt, SeeSight reads it, and one assigned accountant decides.", home),
-    ("traveler.html", "For travelers | SeeSight",
-     "Snap a receipt in your phone browser, see problems before you send, and always know your claim status.", travelers),
-    ("accountant.html", "For accountants | SeeSight",
-     "One queue with search and filters, rules set once, fewer follow-ups and a PDF with the receipt image.", accountants),
-    ("company.html", "For companies | SeeSight",
-     "Invite your team by email, assign each traveler one accountant, and see every expense with its receipt, purpose and decision.", companies),
-    ("howitworks.html", "How it works | SeeSight",
-     "From receipt to decision in four steps: add a receipt, check and send, the accountant decides, email and PDF.", how),
+    ("index.html", "SeeSight | Business Travel Expense Management",
+     "SeeSight is business travel expense software. Travelers snap receipts, SeeSight reads them, and one assigned accountant approves. No app needed.", home),
+    ("traveler.html", "Travel Expense App for Employees | SeeSight",
+     "Add receipts from your phone browser, see over-limit and duplicate expenses before you send, and always know where your expense claim stands.", travelers),
+    ("accountant.html", "Expense Approval for Accountants | SeeSight",
+     "Review travel expense claims in one queue. Set limits once, let rules flag the rest, decide with one comment and export a PDF with receipts.", accountants),
+    ("company.html", "Business Travel Expense Software for Companies | SeeSight",
+     "Invite your team, give each traveler one accountant, and see every business travel expense with its receipt, purpose and decision.", companies),
+    ("howitworks.html", "How SeeSight Works: Receipt to Approval in 4 Steps",
+     "See how SeeSight turns a receipt into an approved travel expense: add a receipt, check and send, the accountant decides, email and PDF.", how),
 ]
 
+NOT_FOUND = f"""
+<section class="hero hero-center">
+  <div class="wrap">
+    <span class="eyebrow">Page not found</span>
+    <h1 class="display">This page took a <span class="serif">wrong turn.</span></h1>
+    <p class="lead">The address may be mistyped, or the page has moved. Everything about SeeSight is one click away.</p>
+    <div class="actions">
+      <a class="btn btn-lg" href="./">Go to the home page</a>
+      <a class="link-arrow" href="howitworks">How SeeSight works{ARROW}</a>
+    </div>
+  </div>
+</section>
+"""
+
+
+def not_found_page():
+    import re
+    h = page("404.html", "Page not found | SeeSight", "This page could not be found.", NOT_FOUND)
+    h = re.sub(r'<link rel="canonical"[^>]*>\n', "", h)
+    h = h.replace('<meta name="robots" content="index, follow, max-image-preview:large">', '<meta name="robots" content="noindex">')
+    h = re.sub(r'<script type="application/ld\+json">.*?</script>\n', "", h, flags=re.S)
+    h = h.replace('href="assets/', 'href="/assets/').replace('src="assets/', 'src="/assets/').replace('href="./"', 'href="/"')
+    h = re.sub(r'href="(traveler|accountant|company|howitworks)"', r'href="/\1"', h)
+    return h
+
+
+SITEMAP_DATE = "2026-10-13"
+
+
+def sitemap():
+    urls = ["", "traveler", "accountant", "company", "howitworks"]
+    rows = "".join(f"  <url><loc>https://seesight.net/{u}</loc><lastmod>{SITEMAP_DATE}</lastmod></url>\n" for u in urls)
+    return f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{rows}</urlset>\n'
+
+
 if __name__ == "__main__":
+    with open(os.path.join(OUT, "404.html"), "w", encoding="utf-8") as f:
+        f.write(not_found_page())
+    with open(os.path.join(OUT, "sitemap.xml"), "w", encoding="utf-8") as f:
+        f.write(sitemap())
+    with open(os.path.join(OUT, "robots.txt"), "w", encoding="utf-8") as f:
+        f.write("User-agent: *\nAllow: /\n\nSitemap: https://seesight.net/sitemap.xml\n")
     for filename, title, desc, body in PAGES:
         with open(os.path.join(OUT, filename), "w", encoding="utf-8") as f:
             f.write(page(filename, title, desc, body))

@@ -135,8 +135,48 @@ def _ver(path):
         return hashlib.sha1(f.read()).hexdigest()[:8]
 
 
+SITE = "https://seesight.net"
+ORG = {
+    "@type": "Organization", "@id": SITE + "/#org", "name": "SeeSight", "url": SITE + "/",
+    "logo": SITE + "/assets/logo.png", "email": EMAIL,
+}
+
+
+def _faq_items(body):
+    """Pull the FAQ questions and answers out of the page so they can also be given to search engines."""
+    import html, re
+    out = []
+    for q, a in re.findall(r"<summary>(.*?)<span.*?</summary>\s*<div class=\"faq-body\"><p>(.*?)</p>", body, re.S):
+        out.append({"@type": "Question", "name": html.unescape(q.strip()),
+                    "acceptedAnswer": {"@type": "Answer", "text": html.unescape(a.strip())}})
+    return out
+
+
+def _schema(slug, title, description, body):
+    import json
+    url = SITE + ("/" if slug == "index" else "/" + slug)
+    graph = [ORG, {"@type": "WebSite", "@id": SITE + "/#site", "name": "SeeSight", "url": SITE + "/", "publisher": {"@id": SITE + "/#org"}},
+             {"@type": "WebPage", "@id": url, "url": url, "name": title, "description": description,
+              "isPartOf": {"@id": SITE + "/#site"}, "inLanguage": "en"}]
+    if slug == "index":
+        graph.append({"@type": "SoftwareApplication", "name": "SeeSight", "url": SITE + "/",
+                      "applicationCategory": "BusinessApplication", "operatingSystem": "Web browser",
+                      "description": description, "publisher": {"@id": SITE + "/#org"}})
+    else:
+        label = dict(PAGES).get(slug, "Page")
+        graph.append({"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Home", "item": SITE + "/"},
+            {"@type": "ListItem", "position": 2, "name": label, "item": url}]})
+    faqs = _faq_items(body)
+    if faqs:
+        graph.append({"@type": "FAQPage", "mainEntity": faqs})
+    return json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False, indent=1)
+
+
 def page(filename, title, description, body):
     css_v, js_v = _ver("assets/styles.css"), _ver("assets/main.js")
+    slug = filename[:-5]
+    url = SITE + ("/" if slug == "index" else "/" + slug)
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -144,19 +184,37 @@ def page(filename, title, description, body):
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title}</title>
 <meta name="description" content="{description}">
+<link rel="canonical" href="{url}">
+<meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="theme-color" content="#F4F7FE">
+<meta property="og:site_name" content="SeeSight">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="{url}">
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{description}">
-<meta property="og:type" content="website">
+<meta property="og:image" content="{SITE}/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="SeeSight: business travel expenses without the stress">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{title}">
+<meta name="twitter:description" content="{description}">
+<meta name="twitter:image" content="{SITE}/assets/og-image.png">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="assets/logo-mark.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600;700&family=Instrument+Serif:ital@0;1&display=swap">
 <link rel="stylesheet" href="assets/styles.css?v={css_v}">
 <script src="assets/main.js?v={js_v}" defer></script>
+<script type="application/ld+json">
+{_schema(slug, title, description, body)}
+</script>
 </head>
 <body>
-{header(filename[:-5])}
+{header(slug)}
 <main id="main">
 {body}
 </main>
