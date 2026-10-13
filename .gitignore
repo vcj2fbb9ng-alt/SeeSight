@@ -11,3 +11,4 @@ backend/data/*.sqlite-journal
 backend/invoices/*.pdf
 
 .DS_Store
+__pycache__/
