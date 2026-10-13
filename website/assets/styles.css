@@ -277,9 +277,6 @@ ul, ol { margin: 0; padding: 0; }
   width: 48px; height: 48px; border-radius: 14px; background: var(--bg); display: grid; place-items: center; color: var(--ink);
 }
 .icon svg { width: 24px; height: 24px; }
-.card.is-lime { background: var(--accent); border-color: transparent; }
-.card.is-lime p { color: var(--primary); }
-.card.is-lime .icon { background: rgba(255, 255, 255, .55); }
 
 /* Problem section */
 .problem { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 6vw, 96px); align-items: start; }

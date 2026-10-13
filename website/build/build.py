@@ -170,7 +170,7 @@ home = f"""
     </div>
     <div class="grid-3">
       <article class="card reveal"><div class="icon">{icon("receipt")}</div><h3 class="h3">Receipt reading</h3><p>Photo or file in, expense record out: merchant, date and amount filled in.</p></article>
-      <article class="card is-lime reveal" style="--d:.06s"><div class="icon">{icon("alert")}</div><h3 class="h3">Early warnings</h3><p>Over-limit and duplicate expenses are flagged before the claim is sent.</p></article>
+      <article class="card reveal" style="--d:.06s"><div class="icon">{icon("alert")}</div><h3 class="h3">Early warnings</h3><p>Over-limit and duplicate expenses are flagged before the claim is sent.</p></article>
       <article class="card reveal" style="--d:.12s"><div class="icon">{icon("clock")}</div><h3 class="h3">Always-on status</h3><p>Draft, submitted, in review, decision. Travelers always know where things stand.</p></article>
       <article class="card reveal"><div class="icon">{icon("rules")}</div><h3 class="h3">Rules set once</h3><p>Accountants set limits once. The first matching rule wins, and the order can be changed.</p></article>
       <article class="card reveal" style="--d:.06s"><div class="icon">{icon("link")}</div><h3 class="h3">One accountant each</h3><p>Every traveler has one assigned accountant. The company can change it at any time.</p></article>
