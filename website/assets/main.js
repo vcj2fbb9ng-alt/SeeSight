@@ -230,48 +230,4 @@
     });
   });
 
-  /* ---------- Rules demo (Accountants page): reorder, first match wins ---------- */
-  document.querySelectorAll("[data-rules]").forEach(function (root) {
-    var list = root.querySelector(".rules-list");
-    var result = root.querySelector("[data-rules-result]");
-    var status = root.querySelector("[data-rules-status]");
-    // The sample expense the demo checks against.
-    var expense = { category: "Hotel", perNight: 280 };
-
-    function render() {
-      var items = Array.prototype.slice.call(list.children);
-      var matched = null;
-      items.forEach(function (li, i) {
-        li.querySelector(".pos").textContent = String(i + 1);
-        li.querySelector('[data-move="up"]').disabled = i === 0;
-        li.querySelector('[data-move="down"]').disabled = i === items.length - 1;
-        var cat = li.getAttribute("data-category");
-        var isMatch = !matched && (cat === expense.category || cat === "*");
-        li.classList.toggle("is-match", isMatch);
-        if (isMatch) matched = li;
-      });
-      if (matched && result) {
-        var limit = parseInt(matched.getAttribute("data-limit"), 10);
-        var name = matched.querySelector("b").textContent;
-        var over = expense.perNight > limit;
-        result.innerHTML = "Rule <b>" + (items.indexOf(matched) + 1) + "</b> applies (" + name + "): " +
-          (over ? "<b>flagged</b>, above the limit." : "<b>within the limit</b>.");
-      }
-    }
-
-    list.addEventListener("click", function (e) {
-      var btn = e.target.closest("[data-move]");
-      if (!btn || btn.disabled) return;
-      var li = btn.closest("li");
-      var dir = btn.getAttribute("data-move");
-      if (dir === "up" && li.previousElementSibling) list.insertBefore(li, li.previousElementSibling);
-      if (dir === "down" && li.nextElementSibling) list.insertBefore(li.nextElementSibling, li);
-      render();
-      var same = li.querySelector('[data-move="' + dir + '"]');
-      (same && !same.disabled ? same : li.querySelector("[data-move]:not(:disabled)")).focus();
-      if (status) status.textContent = li.querySelector("b").textContent + " moved to position " + (Array.prototype.indexOf.call(list.children, li) + 1) + ".";
-    });
-
-    render();
-  });
 })();

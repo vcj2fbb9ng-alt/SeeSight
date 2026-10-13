@@ -49,27 +49,7 @@
         <div class="actions"><a class="btn btn-lg" href="https://cal.com/seesight/30min" data-demo target="_blank" rel="noopener">Book a demo<svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
       </div>
     </div>
-    <div class="dash-hero reveal" style="--d:.15s"><div class="browser" role="img" aria-label="Accountant review queue (placeholder screen)"><div class="browser-bar" aria-hidden="true"><div class="browser-dots"><i></i><i></i><i></i></div><div class="browser-url">app.seesight.net</div><div style="width:47px"></div></div><div class="browser-body"><div class="ui" aria-hidden="true">
-<div class="ui-web">
-  <div class="ui-side"><span class="logo"><img src="assets/logo.png" alt="SeeSight" width="292" height="26"></span><div class="ui-nav active">Queue</div><div class="ui-nav">Rules</div><div class="ui-nav">Travelers</div><div class="ui-nav">Exports</div></div>
-  <div class="ui-main">
-    <div class="ui-row"><div><div class="ui-sub">Accountant</div><div class="ui-title">Review queue</div></div><span class="chip info">In review</span></div>
-    <div class="ui-toolbar">
-      <div class="ui-search">Search traveler, merchant, trip…</div>
-      <span class="ui-filter">Status</span><span class="ui-filter">Flagged</span><span class="ui-filter">Date</span>
-    </div>
-    <table class="ui-table">
-      <thead><tr><th>Traveler</th><th class="hide-sm">Trip purpose</th><th class="hide-sm">Submitted</th><th>Flags</th><th>Status</th></tr></thead>
-      <tbody>
-        <tr class="sel"><td><span class="ui-avatar">NK</span>Nino K.</td><td class="hide-sm">Client visit</td><td class="hide-sm">Today</td><td><span class="chip warn">Over limit</span></td><td><span class="chip info">In review</span></td></tr>
-        <tr><td><span class="ui-avatar">GM</span>Giorgi M.</td><td class="hide-sm">Conference</td><td class="hide-sm">Today</td><td><span class="chip bad">Duplicate?</span></td><td><span class="chip">Submitted</span></td></tr>
-        <tr><td><span class="ui-avatar">AL</span>Ana L.</td><td class="hide-sm">Site visit</td><td class="hide-sm">Yesterday</td><td><span class="chip ok">None</span></td><td><span class="chip">Submitted</span></td></tr>
-        <tr><td><span class="ui-avatar">DB</span>Dato B.</td><td class="hide-sm">Training</td><td class="hide-sm">Yesterday</td><td><span class="chip ok">None</span></td><td><span class="chip ok">Approved</span></td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-</div><span class="placeholder-tag">Placeholder screen</span></div></div></div>
+    <div class="dash-hero reveal" style="--d:.15s"><div class="browser"><div class="browser-bar" aria-hidden="true"><div class="browser-dots"><i></i><i></i><i></i></div><div class="browser-url">app.seesight.net</div><div style="width:47px"></div></div><picture class="browser-body"><source media="(max-width: 720px)" srcset="assets/screens/web-2-queue-m.webp"><img src="assets/screens/web-2-queue.webp" width="1800" height="719" alt="SeeSight accountant queue with search and filters by status, company, traveler and date" loading="eager" decoding="async"></picture></div></div>
   </div>
 </section>
 
@@ -102,24 +82,10 @@
       <div class="reveal">
         <span class="num-tag">Rules</span>
         <h3 id="rules-title">The first matching rule wins. You choose the order.</h3>
-        <p class="lead">Rules are checked from top to bottom, and the first one that matches applies. Reorder them at any time.
-          Try it: move the rules and watch which one applies to the test expense.</p>
+        <p class="lead">Rules are checked from top to bottom, and the first one that matches decides. Reorder them with the arrows at any time.
+          If nothing matches, the expense is marked Maybe for you to look at.</p>
       </div>
-      <div class="feature-visual is-lime reveal" style="--d:.1s">
-<div class="rules" data-rules>
-  <div class="rules-head"><strong>Example rules</strong><span class="ui-label">First match wins</span></div>
-  <ol class="rules-list">
-    <li class="rule" data-category="Hotel" data-limit="250"><span class="pos">1</span><div><b>Hotel</b><span>Up to 250 GEL per night</span></div>
-      <div class="rule-move"><button type="button" data-move="up" aria-label="Move Hotel rule up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg></button><button type="button" data-move="down" aria-label="Move Hotel rule down"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></div></li>
-    <li class="rule" data-category="Hotel" data-limit="300"><span class="pos">2</span><div><b>Hotel, capital city</b><span>Up to 300 GEL per night</span></div>
-      <div class="rule-move"><button type="button" data-move="up" aria-label="Move Hotel, capital city rule up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg></button><button type="button" data-move="down" aria-label="Move Hotel, capital city rule down"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></div></li>
-    <li class="rule" data-category="Taxi" data-limit="80"><span class="pos">3</span><div><b>Taxi</b><span>Up to 80 GEL per ride</span></div>
-      <div class="rule-move"><button type="button" data-move="up" aria-label="Move Taxi rule up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg></button><button type="button" data-move="down" aria-label="Move Taxi rule down"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></div></li>
-  </ol>
-  <p class="rules-test">Test expense: hotel in the capital, 280 GEL per night.<br><span data-rules-result>Rule 1 applies.</span></p>
-  <p class="sr-only" aria-live="polite" data-rules-status></p>
-</div>
-</div>
+      <div class="feature-visual is-lime reveal" style="--d:.1s"><div class="browser"><div class="browser-bar" aria-hidden="true"><div class="browser-dots"><i></i><i></i><i></i></div><div class="browser-url">app.seesight.net</div><div style="width:47px"></div></div><picture class="browser-body"><source media="(max-width: 720px)" srcset="assets/screens/web-5-rules-m.webp"><img src="assets/screens/web-5-rules.webp" width="1800" height="800" alt="SeeSight rules screen: five rules checked from top to bottom, each with a condition and a result" loading="lazy" decoding="async"></picture></div></div>
     </div>
   </div>
 </section>

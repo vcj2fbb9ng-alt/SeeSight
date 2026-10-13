@@ -7,8 +7,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
 from partials import (  # noqa: E402
-    ARROW, WEB_DECIDE, WEB_HOME, WEB_PEOPLE, WEB_QUEUE, SCREEN_CLAIM, SCREEN_DECISION,
-    SCREEN_RECEIPT, SCREEN_STATUS, benefit_cards, browser, cta_band, demo_btn, faq, icon,
+    ARROW, benefit_cards, browser, cta_band, demo_btn, faq, icon,
     logo_marquee, page, phone, steps,
 )
 
@@ -45,8 +44,8 @@ home = f"""
       <a class="link-arrow" href="how-it-works.html">See how it works{ARROW}</a>
     </div>
     <div class="stage reveal" style="--d:.2s">
-      {browser(WEB_HOME, label="SeeSight web app overview (placeholder screen)")}
-      {phone(SCREEN_RECEIPT, label="SeeSight phone screen reading a receipt (placeholder screen)")}
+      {browser("web-1-overview", eager=True)}
+      {phone("phone-1-receipt", eager=True)}
     </div>
   </div>
   {logo_marquee()}
@@ -94,7 +93,7 @@ home = f"""
           </ul>
           <div class="actions" style="margin-top:28px"><a class="link-arrow" href="travelers.html">For travelers{ARROW}</a></div>
         </div>
-        <div class="tab-visual">{phone(SCREEN_CLAIM, label="Traveler claim with flags (placeholder screen)")}</div>
+        <div class="tab-visual">{phone("phone-2-claim")}</div>
       </div>
 
       <div class="tabpanel" role="tabpanel" id="panel-acc" aria-labelledby="tab-acc" tabindex="0" hidden>
@@ -108,7 +107,7 @@ home = f"""
           </ul>
           <div class="actions" style="margin-top:28px"><a class="link-arrow" href="accountants.html">For accountants{ARROW}</a></div>
         </div>
-        <div class="tab-visual">{browser(WEB_QUEUE, label="Accountant review queue (placeholder screen)")}</div>
+        <div class="tab-visual">{browser("web-2-queue")}</div>
       </div>
 
       <div class="tabpanel" role="tabpanel" id="panel-co" aria-labelledby="tab-co" tabindex="0" hidden>
@@ -122,7 +121,7 @@ home = f"""
           </ul>
           <div class="actions" style="margin-top:28px"><a class="link-arrow" href="companies.html">For companies{ARROW}</a></div>
         </div>
-        <div class="tab-visual">{browser(WEB_PEOPLE, label="Company people and assignments (placeholder screen)")}</div>
+        <div class="tab-visual">{browser("web-4-people")}</div>
       </div>
     </div>
   </div>
@@ -137,13 +136,13 @@ home = f"""
     {feature_blocks([
         ("01", "Receipts turn into expenses on their own.",
          "Add a photo or a file. SeeSight reads the merchant, date and amount and creates the expense record. You only check it.",
-         phone(SCREEN_RECEIPT, label="Receipt read into an expense (placeholder screen)"), "is-lime"),
+         phone("phone-1-receipt"), "is-lime"),
         ("02", "Problems show up before the claim is sent.",
          "Over a limit? Possible duplicate? Travelers see it while they can still fix it, so accountants get fewer surprises.",
-         phone(SCREEN_CLAIM, label="Claim with over-limit and duplicate flags (placeholder screen)"), ""),
+         phone("phone-2-claim"), ""),
         ("03", "A clear decision, with a clear record.",
          "The accountant approves, rejects, approves part of it or asks for a document, with one comment. The traveler gets an email and a PDF that includes the receipt image.",
-         browser(WEB_DECIDE, label="Accountant decision screen (placeholder screen)"), "is-navy"),
+         browser("web-3-decision"), "is-navy"),
     ])}
   </div>
 </section>
@@ -203,9 +202,9 @@ travelers = f"""
       check what SeeSight read, and send it to your accountant.</p>
     <div class="actions reveal" style="--d:.15s">{demo_btn(cls="btn btn-lg")}</div>
     <div class="phones reveal" style="--d:.2s">
-      {phone(SCREEN_RECEIPT, label="Receipt read into an expense (placeholder screen)")}
-      {phone(SCREEN_CLAIM, label="Claim with flags before sending (placeholder screen)")}
-      {phone(SCREEN_STATUS, label="Claim status timeline (placeholder screen)")}
+      {phone("phone-1-receipt", eager=True)}
+      {phone("phone-2-claim", eager=True)}
+      {phone("phone-3-status", eager=True)}
     </div>
   </div>
 </section>
@@ -253,22 +252,6 @@ travelers = f"""
 # =====================================================================
 # Accountants
 # =====================================================================
-RULES_DEMO = f"""
-<div class="rules" data-rules>
-  <div class="rules-head"><strong>Example rules</strong><span class="ui-label">First match wins</span></div>
-  <ol class="rules-list">
-    <li class="rule" data-category="Hotel" data-limit="250"><span class="pos">1</span><div><b>Hotel</b><span>Up to 250 GEL per night</span></div>
-      <div class="rule-move"><button type="button" data-move="up" aria-label="Move Hotel rule up">{icon("up")}</button><button type="button" data-move="down" aria-label="Move Hotel rule down">{icon("down")}</button></div></li>
-    <li class="rule" data-category="Hotel" data-limit="300"><span class="pos">2</span><div><b>Hotel, capital city</b><span>Up to 300 GEL per night</span></div>
-      <div class="rule-move"><button type="button" data-move="up" aria-label="Move Hotel, capital city rule up">{icon("up")}</button><button type="button" data-move="down" aria-label="Move Hotel, capital city rule down">{icon("down")}</button></div></li>
-    <li class="rule" data-category="Taxi" data-limit="80"><span class="pos">3</span><div><b>Taxi</b><span>Up to 80 GEL per ride</span></div>
-      <div class="rule-move"><button type="button" data-move="up" aria-label="Move Taxi rule up">{icon("up")}</button><button type="button" data-move="down" aria-label="Move Taxi rule down">{icon("down")}</button></div></li>
-  </ol>
-  <p class="rules-test">Test expense: hotel in the capital, 280 GEL per night.<br><span data-rules-result>Rule 1 applies.</span></p>
-  <p class="sr-only" aria-live="polite" data-rules-status></p>
-</div>
-"""
-
 accountants = f"""
 <section class="hero">
   <div class="wrap">
@@ -283,7 +266,7 @@ accountants = f"""
         <div class="actions">{demo_btn(cls="btn btn-lg")}</div>
       </div>
     </div>
-    <div class="dash-hero reveal" style="--d:.15s">{browser(WEB_QUEUE, label="Accountant review queue (placeholder screen)")}</div>
+    <div class="dash-hero reveal" style="--d:.15s">{browser("web-2-queue", eager=True)}</div>
   </div>
 </section>
 
@@ -299,10 +282,10 @@ accountants = f"""
       <div class="reveal">
         <span class="num-tag">Rules</span>
         <h3 id="rules-title">The first matching rule wins. You choose the order.</h3>
-        <p class="lead">Rules are checked from top to bottom, and the first one that matches applies. Reorder them at any time.
-          Try it: move the rules and watch which one applies to the test expense.</p>
+        <p class="lead">Rules are checked from top to bottom, and the first one that matches decides. Reorder them with the arrows at any time.
+          If nothing matches, the expense is marked Maybe for you to look at.</p>
       </div>
-      <div class="feature-visual is-lime reveal" style="--d:.1s">{RULES_DEMO}</div>
+      <div class="feature-visual is-lime reveal" style="--d:.1s">{browser("web-5-rules")}</div>
     </div>
   </div>
 </section>
@@ -384,7 +367,7 @@ companies = f"""
           <li>Manage your plan and billing</li>
         </ul>
       </div>
-      <div class="feature-visual reveal" style="--d:.1s">{browser(WEB_PEOPLE, label="Company people and assignments (placeholder screen)")}</div>
+      <div class="feature-visual reveal" style="--d:.1s">{browser("web-4-people")}</div>
     </div>
   </div>
 </section>
@@ -435,16 +418,16 @@ how = f"""
     {feature_blocks([
         ("Step 1", "The receipt becomes an expense.",
          "The traveler takes a photo or uploads a file in the phone browser. SeeSight reads it and creates an expense record with the merchant, date and amount.",
-         phone(SCREEN_RECEIPT, label="Receipt read into an expense (placeholder screen)"), "is-lime"),
+         phone("phone-1-receipt"), "is-lime"),
         ("Step 2", "The traveler checks, adds the purpose and sends.",
          "Anything over a limit or that looks like a duplicate is flagged first. Per diem and lost receipts are handled in the same flow.",
-         phone(SCREEN_CLAIM, label="Claim with flags before sending (placeholder screen)"), ""),
+         phone("phone-2-claim"), ""),
         ("Step 3", "One accountant decides.",
          "The claim goes to the traveler's one assigned accountant, already checked against the rules. They decide with one comment.",
-         browser(WEB_DECIDE, label="Accountant decision screen (placeholder screen)"), "is-navy"),
+         browser("web-3-decision"), "is-navy"),
         ("Step 4", "Everyone knows the outcome.",
          "The traveler gets an email with the decision. The claim can be exported as a PDF that includes the receipt image.",
-         phone(SCREEN_DECISION, label="Decision with PDF export (placeholder screen)"), "is-lime"),
+         phone("phone-4-decision"), "is-lime"),
     ])}
   </div>
 </section>

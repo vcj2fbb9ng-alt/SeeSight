@@ -232,169 +232,51 @@ def benefit_cards(items, title, eyebrow="What gets better", lead=None, navy=Fals
 </section></div>"""
 
 
-# ---------- Device frames with placeholder screens ----------
-PH = '<span class="placeholder-tag">Placeholder screen</span>'
+# ---------- Device frames with real product screenshots ----------
+# Images live in assets/screens/ (WebP). Web screens also have a tighter "-m" crop for phones.
+SHOTS = {
+    "phone-1-receipt": (780, 1688), "phone-2-claim": (780, 1688),
+    "phone-3-status": (780, 1688), "phone-4-decision": (780, 1688),
+    "web-1-overview": (1800, 637), "web-2-queue": (1800, 719), "web-3-decision": (1800, 951),
+    "web-4-people": (1800, 822), "web-5-rules": (1800, 800),
+}
+
+ALT = {
+    "phone-1-receipt": "SeeSight on a phone: checking a hotel receipt SeeSight has read, flagged as over the 250 GEL nightly limit",
+    "phone-2-claim": "SeeSight on a phone: the Batumi client visit claim with three records and two warnings, over a limit and a possible duplicate",
+    "phone-3-status": "SeeSight on a phone: claim sent to the accountant, with the status timeline from draft to decision",
+    "phone-4-decision": "SeeSight on a phone: a rejected claim with the accountant’s comment and the approved total",
+    "web-1-overview": "SeeSight company overview: claims this month, claims waiting for review, approved amount and each trip with its status",
+    "web-2-queue": "SeeSight accountant queue with search and filters by status, company, traveler and date",
+    "web-3-decision": "SeeSight accountant decision screen: expense details, the rule that flagged it, decision buttons and the receipt image",
+    "web-4-people": "SeeSight company people page: accountants and travelers, their status and each traveler’s assigned accountant",
+    "web-5-rules": "SeeSight rules screen: five rules checked from top to bottom, each with a condition and a result",
+}
 
 
-def phone(inner, label="SeeSight on a phone (placeholder screen)"):
+def phone(shot, eager=False):
+    w, h = SHOTS[shot]
+    load = "eager" if eager else "lazy"
     return (
-        f'<div class="phone" role="img" aria-label="{label}"><div class="phone-screen">'
-        f'<div class="ui ui-phone" aria-hidden="true">{inner}</div>{PH}</div></div>'
+        f'<div class="phone"><div class="phone-screen">'
+        f'<div class="phone-status" aria-hidden="true"><span>9:41</span><i></i></div>'
+        f'<img src="assets/screens/{shot}.webp" width="{w}" height="{h}" alt="{ALT[shot]}" loading="{load}" decoding="async">'
+        f'</div></div>'
     )
 
 
-def browser(inner, url="app.seesight.net", label="SeeSight in a web browser (placeholder screen)"):
+def browser(shot, eager=False, url="app.seesight.net"):
+    w, h = SHOTS[shot]
+    load = "eager" if eager else "lazy"
     return (
-        f'<div class="browser" role="img" aria-label="{label}">'
+        f'<div class="browser">'
         f'<div class="browser-bar" aria-hidden="true"><div class="browser-dots"><i></i><i></i><i></i></div>'
         f'<div class="browser-url">{url}</div><div style="width:47px"></div></div>'
-        f'<div class="browser-body"><div class="ui" aria-hidden="true">{inner}</div>{PH}</div></div>'
+        f'<picture class="browser-body">'
+        f'<source media="(max-width: 720px)" srcset="assets/screens/{shot}-m.webp">'
+        f'<img src="assets/screens/{shot}.webp" width="{w}" height="{h}" alt="{ALT[shot]}" loading="{load}" decoding="async">'
+        f'</picture></div>'
     )
-
-
-SCREEN_RECEIPT = """
-<div><div class="ui-sub">New expense</div><div class="ui-title">Receipt read</div></div>
-<div class="ui-receipt">Receipt photo</div>
-<div class="ui-card">
-  <div class="ui-row"><span class="ui-label">Merchant</span><span class="ui-value">City hotel</span></div>
-  <div class="ui-row"><span class="ui-label">Date</span><span class="ui-value">12 Mar</span></div>
-  <div class="ui-row"><span class="ui-label">Amount</span><span class="ui-value">480.00 GEL</span></div>
-  <div class="ui-row"><span class="ui-label">Category</span><span class="chip info">Hotel</span></div>
-</div>
-<div class="ui-btn lime">Looks right</div>
-"""
-
-SCREEN_CLAIM = """
-<div><div class="ui-sub">Claim · Draft</div><div class="ui-title">Client visit</div></div>
-<div class="ui-card">
-  <div class="ui-row"><span class="ui-value">Flight</span><span class="chip ok">Ready</span></div>
-  <div class="ui-row"><span class="ui-value">City hotel</span><span class="chip warn">Over limit</span></div>
-  <div class="ui-row"><span class="ui-value">Airport taxi</span><span class="chip bad">Duplicate?</span></div>
-  <div class="ui-row"><span class="ui-value">Per diem</span><span class="chip ok">Ready</span></div>
-</div>
-<div class="ui-flag"><span>!</span><span><b>Check before sending</b>Hotel is above the nightly limit. Add a note for your accountant.</span></div>
-<div class="ui-btn">Send to accountant</div>
-"""
-
-SCREEN_STATUS = """
-<div><div class="ui-sub">Claim status</div><div class="ui-title">Client visit</div></div>
-<div class="ui-card">
-  <div class="ui-row"><span class="ui-value">Draft</span><span class="chip ok">Done</span></div>
-  <div class="ui-row"><span class="ui-value">Submitted</span><span class="chip ok">Done</span></div>
-  <div class="ui-row"><span class="ui-value">In review</span><span class="chip info">Now</span></div>
-  <div class="ui-row"><span class="ui-label">Decision</span><span class="ui-label">Next</span></div>
-</div>
-<div class="ui-card">
-  <div class="ui-label">Assigned accountant</div>
-  <div class="ui-value" style="margin-top:4px">Your accountant</div>
-  <div class="ui-bar w80" style="margin-top:10px"></div>
-  <div class="ui-bar w40" style="margin-top:6px"></div>
-</div>
-<div class="ui-btn lime">Email when decided</div>
-"""
-
-SCREEN_DECISION = """
-<div><div class="ui-sub">Decision</div><div class="ui-title">Approved in part</div></div>
-<div class="ui-card">
-  <div class="ui-row"><span class="ui-label">Claimed</span><span class="ui-value">Full claim</span></div>
-  <div class="ui-row"><span class="ui-label">Approved</span><span class="chip ok">Part</span></div>
-</div>
-<div class="ui-card">
-  <div class="ui-label">Comment from your accountant</div>
-  <div class="ui-bar w80" style="margin-top:10px"></div>
-  <div class="ui-bar w60" style="margin-top:6px"></div>
-</div>
-<div class="ui-card"><div class="ui-row"><span class="ui-value">Claim PDF</span><span class="chip info">With receipts</span></div></div>
-<div class="ui-btn">Download PDF</div>
-"""
-
-
-def _side(active):
-    items = ["Queue", "Rules", "Travelers", "Exports"]
-    navs = "".join(f'<div class="ui-nav{" active" if i == active else ""}">{i}</div>' for i in items)
-    return f'<div class="ui-side"><span class="logo">{LOGO_IMG}</span>{navs}</div>'
-
-
-WEB_QUEUE = f"""
-<div class="ui-web">
-  {_side("Queue")}
-  <div class="ui-main">
-    <div class="ui-row"><div><div class="ui-sub">Accountant</div><div class="ui-title">Review queue</div></div><span class="chip info">In review</span></div>
-    <div class="ui-toolbar">
-      <div class="ui-search">Search traveler, merchant, trip…</div>
-      <span class="ui-filter">Status</span><span class="ui-filter">Flagged</span><span class="ui-filter">Date</span>
-    </div>
-    <table class="ui-table">
-      <thead><tr><th>Traveler</th><th class="hide-sm">Trip purpose</th><th class="hide-sm">Submitted</th><th>Flags</th><th>Status</th></tr></thead>
-      <tbody>
-        <tr class="sel"><td><span class="ui-avatar">NK</span>Nino K.</td><td class="hide-sm">Client visit</td><td class="hide-sm">Today</td><td><span class="chip warn">Over limit</span></td><td><span class="chip info">In review</span></td></tr>
-        <tr><td><span class="ui-avatar">GM</span>Giorgi M.</td><td class="hide-sm">Conference</td><td class="hide-sm">Today</td><td><span class="chip bad">Duplicate?</span></td><td><span class="chip">Submitted</span></td></tr>
-        <tr><td><span class="ui-avatar">AL</span>Ana L.</td><td class="hide-sm">Site visit</td><td class="hide-sm">Yesterday</td><td><span class="chip ok">None</span></td><td><span class="chip">Submitted</span></td></tr>
-        <tr><td><span class="ui-avatar">DB</span>Dato B.</td><td class="hide-sm">Training</td><td class="hide-sm">Yesterday</td><td><span class="chip ok">None</span></td><td><span class="chip ok">Approved</span></td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-"""
-
-WEB_HOME = f"""
-<div class="ui-web">
-  {_side("Queue")}
-  <div class="ui-main">
-    <div class="ui-row"><div><div class="ui-sub">Overview</div><div class="ui-title">Travel expenses</div></div><span class="chip ok">All in one place</span></div>
-    <div class="ui-kpis">
-      <div class="ui-kpi"><div class="ui-label">Submitted</div><div class="ui-bar w60"></div></div>
-      <div class="ui-kpi"><div class="ui-label">In review</div><div class="ui-bar w40"></div></div>
-      <div class="ui-kpi"><div class="ui-label">Decided</div><div class="ui-bar w80"></div></div>
-    </div>
-    <table class="ui-table">
-      <thead><tr><th>Traveler</th><th>Purpose</th><th class="hide-sm">Receipt</th><th>Status</th></tr></thead>
-      <tbody>
-        <tr class="sel"><td><span class="ui-avatar">NK</span>Nino K.</td><td>Client visit</td><td class="hide-sm">Attached</td><td><span class="chip info">In review</span></td></tr>
-        <tr><td><span class="ui-avatar">GM</span>Giorgi M.</td><td>Conference</td><td class="hide-sm">Attached</td><td><span class="chip warn">Document asked</span></td></tr>
-        <tr><td><span class="ui-avatar">AL</span>Ana L.</td><td>Site visit</td><td class="hide-sm">Attached</td><td><span class="chip ok">Approved</span></td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-"""
-
-WEB_PEOPLE = """
-<div class="ui-web" style="grid-template-columns:1fr">
-  <div class="ui-main">
-    <div class="ui-row"><div><div class="ui-sub">Company settings</div><div class="ui-title">People</div></div><span class="chip ok">Invite by email</span></div>
-    <div class="ui-toolbar"><span class="ui-filter" style="background:var(--ink);color:#fff;border-color:var(--ink)">People</span><span class="ui-filter">Plan &amp; billing</span><span class="ui-filter">Settings</span></div>
-    <table class="ui-table">
-      <thead><tr><th>Name</th><th>Role</th><th>Accountant</th></tr></thead>
-      <tbody>
-        <tr><td><span class="ui-avatar">NK</span>Nino K.</td><td>Traveler</td><td><span class="chip info">Mariam T.</span></td></tr>
-        <tr class="sel"><td><span class="ui-avatar">GM</span>Giorgi M.</td><td>Traveler</td><td><span class="chip warn">Change…</span></td></tr>
-        <tr><td><span class="ui-avatar">MT</span>Mariam T.</td><td>Accountant</td><td>—</td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-"""
-
-WEB_DECIDE = """
-<div class="ui-web" style="grid-template-columns:1fr 1fr">
-  <div class="ui-main" style="border-right:1px solid var(--line)">
-    <div><div class="ui-sub">Expense</div><div class="ui-title">City hotel</div></div>
-    <div class="ui-receipt" style="height:150px">Receipt image</div>
-    <div class="ui-flag"><span>!</span><span><b>Hotel rule</b>Above the nightly limit set in your rules.</span></div>
-  </div>
-  <div class="ui-main">
-    <div class="ui-sub">Your decision</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-      <div class="ui-btn lime" style="margin:0">Approve</div>
-      <div class="ui-btn" style="margin:0;background:#fff;color:var(--ink);border:1px solid var(--line)">Reject</div>
-      <div class="ui-btn" style="margin:0;background:#fff;color:var(--ink);border:1px solid var(--line)">Approve part</div>
-      <div class="ui-btn" style="margin:0;background:#fff;color:var(--ink);border:1px solid var(--line)">Ask for document</div>
-    </div>
-    <div class="ui-card" style="box-shadow:none;border:1px solid var(--line)"><div class="ui-label">One comment</div><div class="ui-bar w80" style="margin-top:10px"></div><div class="ui-bar w40" style="margin-top:6px"></div></div>
-  </div>
-</div>
-"""
 
 
 def logo_marquee(label="Partner companies. Logos coming soon."):
