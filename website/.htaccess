@@ -1,5 +1,5 @@
 # SeeSight website: clean addresses without .html
-# /traveler -> traveler.html, /accountant -> accountant.html, /company -> company.html, /how-it-works -> how-it-works.html
+# /traveler -> traveler.html, /accountant -> accountant.html, /company -> company.html, /howitworks -> howitworks.html
 Options -MultiViews
 DirectoryIndex index.html
 RewriteEngine On
@@ -12,6 +12,7 @@ RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 RewriteRule ^travelers(\.html)?/?$ /traveler [R=301,L]
 RewriteRule ^accountants(\.html)?/?$ /accountant [R=301,L]
 RewriteRule ^companies(\.html)?/?$ /company [R=301,L]
+RewriteRule ^how-it-works(\.html)?/?$ /howitworks [R=301,L]
 RewriteCond %{THE_REQUEST} \s/+(index\.html|home/?)[\s?]
 RewriteRule ^ / [R=301,L]
 RewriteCond %{THE_REQUEST} \s/+([a-z-]+)\.html[\s?]

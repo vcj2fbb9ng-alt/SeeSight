@@ -7,8 +7,8 @@ fallback. Without JavaScript the same buttons simply link to Cal.com.
 
 ```
 website/
-  index.html, traveler.html, accountant.html, company.html, how-it-works.html
-  .htaccess           clean addresses (/traveler, /accountant, /company, /how-it-works), https, old-URL redirects
+  index.html, traveler.html, accountant.html, company.html, howitworks.html
+  .htaccess           clean addresses (/traveler, /accountant, /company, /howitworks), https, old-URL redirects
   assets/styles.css   design tokens, layout, components
   assets/main.js      nav, mobile menu, demo popup, reveals, count-ups, tabs, FAQ, rules demo
   assets/logo.png, assets/logo-mark.png   logo and favicon

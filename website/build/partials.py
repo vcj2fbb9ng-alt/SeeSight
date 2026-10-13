@@ -14,7 +14,7 @@ PAGES = [
     ("traveler", "For travelers"),
     ("accountant", "For accountants"),
     ("company", "For companies"),
-    ("how-it-works", "How it works"),
+    ("howitworks", "How it works"),
 ]
 
 LOGO_IMG = '<img src="assets/logo.png" alt="SeeSight" width="292" height="26">'

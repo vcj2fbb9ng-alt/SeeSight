@@ -41,7 +41,7 @@ home = f"""
       and your assigned accountant decides. Everyone always knows where a claim stands.</p>
     <div class="actions reveal" style="--d:.15s">
       {demo_btn(cls="btn btn-lg")}
-      <a class="link-arrow" href="how-it-works">See how it works{ARROW}</a>
+      <a class="link-arrow" href="howitworks">See how it works{ARROW}</a>
     </div>
     <div class="stage reveal" style="--d:.2s">
       {browser("web-1-overview", eager=True)}
@@ -158,7 +158,7 @@ home = f"""
       <article class="card reveal" style="--d:.08s"><div class="icon">{icon("check")}</div><h3 class="h3">2. Check and send</h3><p>Confirm the details, add the purpose of the trip and send the claim to your assigned accountant.</p></article>
       <article class="card reveal" style="--d:.16s"><div class="icon">{icon("mail")}</div><h3 class="h3">3. Get a decision</h3><p>Your accountant decides with one comment. You get an email, and a PDF with the receipt image.</p></article>
     </div>
-    <div class="actions reveal"><a class="link-arrow" href="how-it-works" style="color:var(--lime)">The full flow{ARROW}</a></div>
+    <div class="actions reveal"><a class="link-arrow" href="howitworks" style="color:var(--lime)">The full flow{ARROW}</a></div>
   </div>
 </section>
 
@@ -465,7 +465,7 @@ PAGES = [
      "One queue with search and filters, rules set once, fewer follow-ups and a PDF with the receipt image.", accountants),
     ("company.html", "For companies | SeeSight",
      "Invite your team by email, assign each traveler one accountant, and see every expense with its receipt, purpose and decision.", companies),
-    ("how-it-works.html", "How it works | SeeSight",
+    ("howitworks.html", "How it works | SeeSight",
      "From receipt to decision in four steps: add a receipt, check and send, the accountant decides, email and PDF.", how),
 ]
 
