@@ -10,7 +10,7 @@ website/
   index.html, travelers.html, accountants.html, companies.html, how-it-works.html
   assets/styles.css   design tokens, layout, components
   assets/main.js      nav, mobile menu, demo popup, reveals, count-ups, tabs, FAQ, rules demo
-  assets/favicon.svg
+  assets/logo.png, assets/logo-mark.png   logo and favicon
   build/              optional generator for the HTML (shared header, footer, mockups)
 ```
 

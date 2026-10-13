@@ -15,13 +15,7 @@ PAGES = [
     ("how-it-works.html", "How it works"),
 ]
 
-LOGO_MARK = (
-    '<svg viewBox="0 0 32 32" aria-hidden="true">'
-    '<rect width="32" height="32" rx="9" fill="#0D1B2E"/>'
-    '<path d="M5.5 16c2.9-4.8 6.4-7.2 10.5-7.2s7.6 2.4 10.5 7.2c-2.9 4.8-6.4 7.2-10.5 7.2S8.4 20.8 5.5 16z" '
-    'fill="none" stroke="#BDEB6B" stroke-width="2.2" stroke-linejoin="round"/>'
-    '<circle cx="16" cy="16" r="3.6" fill="#BDEB6B"/></svg>'
-)
+LOGO_IMG = '<img src="assets/logo.png" alt="SeeSight" width="292" height="26">'
 
 ARROW = (
     '<svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
@@ -86,7 +80,7 @@ def header(active):
     return f"""<a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header">
   <div class="wrap nav">
-    <a class="logo" href="index.html" aria-label="SeeSight home">{LOGO_MARK}<span>SeeSight</span></a>
+    <a class="logo" href="index.html" aria-label="SeeSight home">{LOGO_IMG}</a>
     <nav aria-label="Main">
       <ul class="nav-links">{links}</ul>
     </nav>
@@ -108,7 +102,7 @@ def footer():
   <div class="wrap">
     <div class="footer-top">
       <div class="footer-brand">
-        <a class="logo" href="index.html" aria-label="SeeSight home">{LOGO_MARK}<span>SeeSight</span></a>
+        <a class="logo" href="index.html" aria-label="SeeSight home">{LOGO_IMG}</a>
         <p class="footer-tag">SeeSight. <span class="muted">Business travel expenses without the stress.</span></p>
       </div>
       <div class="footer-col">
@@ -139,11 +133,11 @@ def page(filename, title, description, body):
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title}</title>
 <meta name="description" content="{description}">
-<meta name="theme-color" content="#F3F2EC">
+<meta name="theme-color" content="#F4F7FE">
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{description}">
 <meta property="og:type" content="website">
-<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/logo-mark.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600;700&family=Instrument+Serif:ital@0;1&display=swap">
@@ -318,7 +312,7 @@ SCREEN_DECISION = """
 def _side(active):
     items = ["Queue", "Rules", "Travelers", "Exports"]
     navs = "".join(f'<div class="ui-nav{" active" if i == active else ""}">{i}</div>' for i in items)
-    return f'<div class="ui-side"><span class="logo">{LOGO_MARK}<span>SeeSight</span></span>{navs}</div>'
+    return f'<div class="ui-side"><span class="logo">{LOGO_IMG}</span>{navs}</div>'
 
 
 WEB_QUEUE = f"""
