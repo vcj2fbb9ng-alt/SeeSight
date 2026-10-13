@@ -41,7 +41,7 @@ home = f"""
       and your assigned accountant decides. Everyone always knows where a claim stands.</p>
     <div class="actions reveal" style="--d:.15s">
       {demo_btn(cls="btn btn-lg")}
-      <a class="link-arrow" href="how-it-works.html">See how it works{ARROW}</a>
+      <a class="link-arrow" href="how-it-works">See how it works{ARROW}</a>
     </div>
     <div class="stage reveal" style="--d:.2s">
       {browser("web-1-overview", eager=True)}
@@ -91,7 +91,7 @@ home = f"""
             <li>Over-limit and duplicate expenses flagged before sending</li>
             <li>Per diem and lost receipts in the same flow</li>
           </ul>
-          <div class="actions" style="margin-top:28px"><a class="link-arrow" href="travelers.html">For travelers{ARROW}</a></div>
+          <div class="actions" style="margin-top:28px"><a class="link-arrow" href="traveler">For travelers{ARROW}</a></div>
         </div>
         <div class="tab-visual">{phone("phone-2-claim")}</div>
       </div>
@@ -105,7 +105,7 @@ home = f"""
             <li>Rules like "Hotel: up to 250 GEL per night" flag the rest</li>
             <li>Decide with one comment, export a PDF with the receipt</li>
           </ul>
-          <div class="actions" style="margin-top:28px"><a class="link-arrow" href="accountants.html">For accountants{ARROW}</a></div>
+          <div class="actions" style="margin-top:28px"><a class="link-arrow" href="accountant">For accountants{ARROW}</a></div>
         </div>
         <div class="tab-visual">{browser("web-2-queue")}</div>
       </div>
@@ -119,7 +119,7 @@ home = f"""
             <li>Change a traveler's accountant at any time</li>
             <li>People, plan and billing, and settings in one place</li>
           </ul>
-          <div class="actions" style="margin-top:28px"><a class="link-arrow" href="companies.html">For companies{ARROW}</a></div>
+          <div class="actions" style="margin-top:28px"><a class="link-arrow" href="company">For companies{ARROW}</a></div>
         </div>
         <div class="tab-visual">{browser("web-4-people")}</div>
       </div>
@@ -158,7 +158,7 @@ home = f"""
       <article class="card reveal" style="--d:.08s"><div class="icon">{icon("check")}</div><h3 class="h3">2. Check and send</h3><p>Confirm the details, add the purpose of the trip and send the claim to your assigned accountant.</p></article>
       <article class="card reveal" style="--d:.16s"><div class="icon">{icon("mail")}</div><h3 class="h3">3. Get a decision</h3><p>Your accountant decides with one comment. You get an email, and a PDF with the receipt image.</p></article>
     </div>
-    <div class="actions reveal"><a class="link-arrow" href="how-it-works.html" style="color:var(--lime)">The full flow{ARROW}</a></div>
+    <div class="actions reveal"><a class="link-arrow" href="how-it-works" style="color:var(--lime)">The full flow{ARROW}</a></div>
   </div>
 </section>
 
@@ -459,11 +459,11 @@ how = f"""
 PAGES = [
     ("index.html", "SeeSight: business travel expenses without the stress",
      "SeeSight removes the hidden financial stress of business travel. Add a receipt, SeeSight reads it, and one assigned accountant decides.", home),
-    ("travelers.html", "For travelers | SeeSight",
+    ("traveler.html", "For travelers | SeeSight",
      "Snap a receipt in your phone browser, see problems before you send, and always know your claim status.", travelers),
-    ("accountants.html", "For accountants | SeeSight",
+    ("accountant.html", "For accountants | SeeSight",
      "One queue with search and filters, rules set once, fewer follow-ups and a PDF with the receipt image.", accountants),
-    ("companies.html", "For companies | SeeSight",
+    ("company.html", "For companies | SeeSight",
      "Invite your team by email, assign each traveler one accountant, and see every expense with its receipt, purpose and decision.", companies),
     ("how-it-works.html", "How it works | SeeSight",
      "From receipt to decision in four steps: add a receipt, check and send, the accountant decides, email and PDF.", how),

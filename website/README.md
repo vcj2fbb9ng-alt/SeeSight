@@ -7,7 +7,8 @@ fallback. Without JavaScript the same buttons simply link to Cal.com.
 
 ```
 website/
-  index.html, travelers.html, accountants.html, companies.html, how-it-works.html
+  index.html, traveler.html, accountant.html, company.html, how-it-works.html
+  .htaccess           clean addresses (/traveler, /accountant, /company, /how-it-works), https, old-URL redirects
   assets/styles.css   design tokens, layout, components
   assets/main.js      nav, mobile menu, demo popup, reveals, count-ups, tabs, FAQ, rules demo
   assets/logo.png, assets/logo-mark.png   logo and favicon
@@ -43,6 +44,5 @@ overwrite them.
 
 ## Deploy
 
-Upload the contents of `website/` (the `build/` folder is not needed) to any static host:
-Netlify, Vercel, Cloudflare Pages, GitHub Pages or S3. Point the custom domain at it. The
-site works from the domain root or a subfolder because all links are relative.
+Upload the contents of `website/` (the `build/` folder is not needed), including the hidden `.htaccess`, to an Apache host such as cPanel. The `.htaccess` file gives the pages clean addresses without `.html`. On other static hosts (
+Netlify, Vercel, Cloudflare Pages) turn on their "pretty URLs" option instead. The site must sit at the domain root.

@@ -8,11 +8,13 @@ the website/ folder after editing anything in build/; it rewrites the *.html fil
 CAL_URL = "https://cal.com/seesight/30min"
 EMAIL = "info@seesight.net"
 
+# Clean addresses (no .html). .htaccess maps /traveler to traveler.html on the server.
+HOME = "./"
 PAGES = [
-    ("travelers.html", "For travelers"),
-    ("accountants.html", "For accountants"),
-    ("companies.html", "For companies"),
-    ("how-it-works.html", "How it works"),
+    ("traveler", "For travelers"),
+    ("accountant", "For accountants"),
+    ("company", "For companies"),
+    ("how-it-works", "How it works"),
 ]
 
 LOGO_IMG = '<img src="assets/logo.png" alt="SeeSight" width="292" height="26">'
@@ -80,7 +82,7 @@ def header(active):
     return f"""<a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header">
   <div class="wrap nav">
-    <a class="logo" href="index.html" aria-label="SeeSight home">{LOGO_IMG}</a>
+    <a class="logo" href="{HOME}" aria-label="SeeSight home">{LOGO_IMG}</a>
     <nav aria-label="Main">
       <ul class="nav-links">{links}</ul>
     </nav>
@@ -97,12 +99,12 @@ def header(active):
 
 
 def footer():
-    links = "".join(f'<li><a href="{h}">{l}</a></li>' for h, l in [("index.html", "Home")] + PAGES)
+    links = "".join(f'<li><a href="{h}">{l}</a></li>' for h, l in [(HOME, "Home")] + PAGES)
     return f"""<footer class="site-footer">
   <div class="wrap">
     <div class="footer-top">
       <div class="footer-brand">
-        <a class="logo" href="index.html" aria-label="SeeSight home">{LOGO_IMG}</a>
+        <a class="logo" href="{HOME}" aria-label="SeeSight home">{LOGO_IMG}</a>
         <p class="footer-tag">SeeSight. <span class="muted">Business travel expenses without the stress.</span></p>
       </div>
       <div class="footer-col">
@@ -154,7 +156,7 @@ def page(filename, title, description, body):
 <script src="assets/main.js?v={js_v}" defer></script>
 </head>
 <body>
-{header(filename)}
+{header(filename[:-5])}
 <main id="main">
 {body}
 </main>

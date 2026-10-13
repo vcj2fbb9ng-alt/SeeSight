@@ -1,0 +1,27 @@
+# SeeSight website: clean addresses without .html
+# /traveler -> traveler.html, /accountant -> accountant.html, /company -> company.html, /how-it-works -> how-it-works.html
+Options -MultiViews
+DirectoryIndex index.html
+RewriteEngine On
+
+# Always use the secure address (https)
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Old addresses keep working: send them to the new clean ones
+RewriteRule ^travelers(\.html)?/?$ /traveler [R=301,L]
+RewriteRule ^accountants(\.html)?/?$ /accountant [R=301,L]
+RewriteRule ^companies(\.html)?/?$ /company [R=301,L]
+RewriteCond %{THE_REQUEST} \s/+(index\.html|home/?)[\s?]
+RewriteRule ^ / [R=301,L]
+RewriteCond %{THE_REQUEST} \s/+([a-z-]+)\.html[\s?]
+RewriteRule ^ /%1 [R=301,L]
+
+# A trailing slash (/traveler/) goes to the address without it
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([a-z-]+)/$ /$1 [R=301,L]
+
+# Serve the clean addresses from the .html files
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^([a-z-]+)$ $1.html [L]
