@@ -141,7 +141,7 @@ ul, ol { margin: 0; padding: 0; }
 .site-header.is-scrolled { border-bottom-color: var(--line); background: rgba(244, 247, 254, .86); }
 .nav { display: flex; align-items: center; gap: 24px; height: 72px; }
 .logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--font-display); font-weight: 700; font-size: 21px; letter-spacing: -0.03em; }
-.logo img { height: 26px; width: auto; display: block; }
+.logo img { height: 21px; width: auto; display: block; }
 .nav > nav { margin-left: auto; }
 .nav-links { display: flex; gap: 4px; list-style: none; }
 .nav-links a {
@@ -563,8 +563,8 @@ ul, ol { margin: 0; padding: 0; }
 /* CTA on the navy band uses the accent so it stands out */
 .cta-band .btn { --btn-bg: var(--accent); --btn-fg: var(--accent-ink); }
 .cta-band .btn:hover { background: #fff; box-shadow: 0 10px 24px rgba(143, 180, 255, .35); }
-.site-footer .logo img { height: 28px; }
-@media (max-width: 480px) { .nav .logo img { height: 22px; } }
+.site-footer .logo img { height: 22px; }
+@media (max-width: 480px) { .nav .logo img { height: 17px; } }
 
 /* Feature blocks that show a web screen get more width and less padding so the screen stays readable */
 @media (min-width: 861px) {
@@ -572,3 +572,14 @@ ul, ol { margin: 0; padding: 0; }
   .feature:nth-child(even):has(.browser) { grid-template-columns: 1.25fr .8fr; }
 }
 .feature-visual:has(.browser) { padding: clamp(16px, 2.6vw, 36px); min-height: 0; }
+
+/* Phones: role tabs share the full width so no label is cut off */
+@media (max-width: 600px) {
+  .tablist { display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; overflow: visible; }
+  .tab { padding: 10px 4px; font-size: 14px; text-align: center; }
+}
+@media (max-width: 360px) { .tab { font-size: 13px; } }
+/* Phones: web screenshots fade out at the right edge instead of ending in cut-off text */
+@media (max-width: 720px) {
+  .browser-body img { -webkit-mask-image: linear-gradient(90deg, #000 72%, transparent 98%); mask-image: linear-gradient(90deg, #000 72%, transparent 98%); }
+}
