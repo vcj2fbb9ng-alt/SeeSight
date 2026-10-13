@@ -125,7 +125,16 @@ def footer():
 </footer>"""
 
 
+def _ver(path):
+    """Short content hash, appended to asset URLs so browsers never use a stale copy."""
+    import hashlib, os
+    full = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), path)
+    with open(full, "rb") as f:
+        return hashlib.sha1(f.read()).hexdigest()[:8]
+
+
 def page(filename, title, description, body):
+    css_v, js_v = _ver("assets/styles.css"), _ver("assets/main.js")
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -141,8 +150,8 @@ def page(filename, title, description, body):
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600;700&family=Instrument+Serif:ital@0;1&display=swap">
-<link rel="stylesheet" href="assets/styles.css">
-<script src="assets/main.js" defer></script>
+<link rel="stylesheet" href="assets/styles.css?v={css_v}">
+<script src="assets/main.js?v={js_v}" defer></script>
 </head>
 <body>
 {header(filename)}
