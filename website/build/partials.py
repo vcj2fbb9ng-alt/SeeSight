@@ -346,13 +346,3 @@ def browser(shot, eager=False, url="app.seesight.net"):
         f'<img src="assets/screens/{shot}.webp" width="{w}" height="{h}" alt="{ALT[shot]}" loading="{load}" decoding="async">'
         f'</picture></div>'
     )
-
-
-def logo_marquee(label="Partner companies. Logos coming soon."):
-    names = [f"Partner logo {i}" for i in range(1, 9)]
-    a = "".join(f'<span class="logo-ph">{n}</span>' for n in names)
-    b = "".join(f'<span class="logo-ph" aria-hidden="true">{n}</span>' for n in names)
-    return f"""<div class="marquee-wrap">
-  <p class="marquee-label">{label}</p>
-  <div class="marquee"><div class="marquee-track">{a}{b}</div></div>
-</div>"""

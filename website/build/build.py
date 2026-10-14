@@ -8,7 +8,7 @@ import sys
 sys.path.insert(0, os.path.dirname(__file__))
 from partials import (  # noqa: E402
     ARROW, benefit_cards, browser, cta_band, demo_btn, faq, icon,
-    logo_marquee, page, phone, steps,
+    page, phone, steps,
 )
 
 OUT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -48,7 +48,6 @@ home = f"""
       {phone("phone-1-receipt", eager=True)}
     </div>
   </div>
-  {logo_marquee()}
 </section>
 
 <section class="section" aria-labelledby="problem-title">
